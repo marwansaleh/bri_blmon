@@ -1,0 +1,17 @@
+16 Juni 2015
+- /funcs/constant.php 
+----- change BASE_URL
+----- date_default_timezone_set('Asia/Jakarta');
+
+- /.htaccess ---- change base URL
+
+- /clients/reports_detail.php
+- /clients/reports_detail_print.php
+- /clients/ajax.php
+
+
+14 Agustus 2015
+- /clients/report_detail.php
+- /clients/reports_wilayah.php
+- /clients/ajax.php
+

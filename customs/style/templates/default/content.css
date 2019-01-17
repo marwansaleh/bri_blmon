@@ -1,0 +1,129 @@
+table.data-list{
+    border: none;
+    float: left;
+    width: 100%;
+    border-spacing: 1px;
+}
+table.data-list tr{
+    background-color: #fcf7f7;
+}
+table.data-list tr:nth-child(2n+1){
+    background-color: #f2f7fc;
+}
+table.data-list th
+{
+    padding: 10px;
+    font-weight: bold;
+    color: #FFFFFF;
+    border: solid 1px #f2f2f2;
+    background-color: #00529c;
+}
+table.data-list td
+{
+    padding: 5px;
+    border: solid 1px #f2f2f2;
+}
+table.data-list tr.row-msg:hover
+{
+    background-color: #c0d4e8;
+    cursor: pointer;
+}
+table.data-list a {
+    text-decoration: underline;
+    cursor: pointer;
+    color: inherit;
+}
+ul.navigation {
+    margin: 0; padding: 0;
+    list-style: none;
+}
+ul.navigation li {
+    padding: 5px;
+    float: left;
+    margin-left: 5px;
+    font-weight: bold;
+    border: solid 1px #ccc;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    cursor: pointer;
+}
+ul.navigation li.active{
+    background-color: #c0d4e8;
+}
+
+table.data-input{
+    min-width: 750px;
+    float: left;
+    border: none;
+}
+table.data-input td.title{
+    font-weight: bold;
+    padding-top: 10px;
+    vertical-align: top;
+}
+table.data-input input[type=text], table.data-input input[type=file], table.data-input textarea {padding: 10px; width: 300px;}
+table.data-input select {padding: 10px; width: 320px;}
+table.data-input input[type=submit], table.data-input input[type=reset], table.data-input input[type=button]
+{
+    padding: 10px;
+    font-weight: bold;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    cursor: pointer;
+    background:-moz-linear-gradient(top, #f4f6f7, #d6d9db) no-repeat #d6d9db;
+    background:-webkit-gradient(linear, left top, left bottom, from(#f4f6f7), to(#d6d9db)) no-repeat #d6d9db;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f4f6f7', endColorstr='#d6d9db');
+}
+.numeric{text-align: right;}
+table.doc-references-list{
+    width: 100%;
+    padding: 0;
+    border-spacing: 0;
+    border: solid 1px #ccc;
+}
+table.doc-references-list a.view-docref{
+    text-decoration: underline;
+    cursor: pointer;
+}
+table.doc-references-list tr{
+    border-bottom: solid 1px #ccc;
+    background-color: #f2f7fc;
+}
+table.doc-references-list tr:nth-child(2n+1){
+    background-color: #E7E7E7;
+}
+table.doc-references-list th{
+    background-color: #c0d4e8;
+    padding: 10px;
+}
+table.doc-references-list td{
+    padding: 10px;
+}
+p.error-message{
+    font-size: 15px;
+    font-style: italic;
+}
+/*
+for tabs section
+*/
+div.tabs-container{
+    float: left;
+    width: 100%;
+}
+div.tabs-container .tabs-each
+{
+    float:left;
+    padding:10px;
+}
+.icon-ok {
+    width: 16px;
+    height: 16px;
+    background: url(images/icon-ok.png) center no-repeat;
+}
+.icon-oknot {
+    width: 16px;
+    height: 16px;
+    background: url(images/icon-oknot.png) center no-repeat;
+}

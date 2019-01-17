@@ -1,0 +1,72 @@
+@charset "utf-8";
+/* CSS Document */
+
+body {
+    margin:0;
+    font-family:Frutiger, Arial, Tahoma, Geneva, sans-serif;
+    font-size:12px;
+    color:#777;	    
+    /*
+    background:-moz-linear-gradient(top, #FFF, #00529c) no-repeat #00529c;
+    background:-webkit-gradient(linear, left top, left bottom, from(#FFF), to(#00529c)) no-repeat #00529c;
+    */
+    background: url(images/app-background.png) no-repeat left bottom;
+}
+input,textarea, select { 
+    color:#666; 
+    border: solid 1px #7aa3c9;
+}
+#panel-header {
+    padding-top: 10px;
+    width:100%;
+    height:52px;
+}
+div.app-title{
+    background:url(images/app-title.png) no-repeat;
+    float:left;
+    width:147px;
+    height:52px;
+    margin-top: 2px;
+    margin-left:15px;
+}
+div.logo {
+    background:url(images/logo-bri.png) no-repeat;
+    float:right;
+    margin-top: 2px;
+    width:153px; height: 45px;
+    margin-right: 10px;
+}
+#panel-content {
+    float:none;
+    margin-left:auto;
+    margin-right:auto;	
+    min-height: 600px;
+}
+.content{
+    float: left;
+    padding: 10px;
+}
+.copyright { 
+    width:800px; float:none; 
+    margin-left:auto; margin-right:auto; margin-top:100px; margin-bottom:5px; 
+    text-align:center; font-size:10px;
+}
+.stripe-blue{ height:2px; background-color:#00529c;	clear:both; }
+.stripe-orange{ height:2px; background-color:#dc661e;	clear:both; }
+.loader-bg {
+    display: none;
+    width: 800px;
+    height: 600px;
+    float: left;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+.loader {
+    float: left;
+    width: 31px;
+    height: 31px;
+    background: url(images/ajax-loader.gif) center no-repeat;
+    z-index: 10000;
+}
+.clr { clear:both; }

@@ -1,0 +1,40 @@
+@charset "utf-8";
+/* CSS Document */
+
+#login-box {
+	border: solid 1px #efefef;
+	border-radius: 15px;
+	-webkit-border-radius: 15px;
+	-moz-border-radius: 15px;
+	width:717px; height:265px;
+	margin-top:50px;
+	margin-left:auto;
+	margin-right:auto;
+	float:none;
+	
+	/*
+	background: -moz-linear-gradient(top, rgba(223,225,231,1) 0%, rgba(255,255,255,1) 16%, rgba(255,255,255,1) 84%, 
+				rgba(223,225,231,1) 100%);
+	*/
+	background-color:#FFF;
+	background-image:url(images/login-background.jpg);
+	background-position:top left;
+	background-repeat:no-repeat;
+	
+	-moz-box-shadow: 0px 0px 5px 5px rgba(221, 224, 230, 0.7);
+	-webkit-box-shadow: 0px 0px 5px 5px rgba(221, 224, 230, 0.7);
+	box-shadow: 0px 0px 5px 5px rgba(221, 224, 230, 0.7);
+}
+
+div.separator {
+	background-image:url(images/login-separator.jpg);
+	background-repeat:no-repeat;
+	margin-left:382px;
+	width:10px;
+	height:inherit;
+	float:left;
+}
+div.login-key-container { width: 325px; float:left; }
+div.login-error { width:250px; float:none; margin-left:auto; margin-right:auto; margin-top:5px; color:#F00; font-style:italic; }
+div.login-key { width:250px; float:left; margin-left:10px; margin-right:auto; margin-top:60px; }
+div.login-key tr { height: 30px; }

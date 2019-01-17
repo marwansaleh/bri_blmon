@@ -1,0 +1,37 @@
+DAFTAR ITEM PENGEMBANGAN APLIKASI BL MONITORING
+
+1. Filter program berdasarkan status realisasi (Yes/No) ==> done
+2. Penambahan field "nodin_putusan" ==> done
+3. Search by "nodin_putusan" ==> done
+4. Export data program ke Excel (raw data program) ==> done
+5. Fitur download file backup database to zip ==> done
+6. Di laporan, nomor urut di masing-masing detil cabang laporan program ==> done
+7. Di laporan, merubah nomor urut kanwil menjadi Abjad ==> done
+8. Pembuatan script yang akan dieksekusi oleh scheduler backup ==> done
+9. Scheduler (CRON JOB) backup database per hari jumat pukul 23.59 waktu server ==> 59 23 * * 5 /var/www/blmon/cron_dbbackup.php 
+10. Penambahan field "nodin_persetujuan" form update program ==> done
+
+
+UPDATE FILES
+
+clients/programs.php
+clients/program_update.php
+clients/ajax.php
+./PHPExcel
+funcs/PHPExcel.php
+funcs/constant.php --> define("APP_BASE_PATH", dirname(__FILE__) .'/../');
+funcs/database.class.php
+clients/get_excel_alt.php
+clients/dbbackup.php
+clients/get_dbbackup_file.php
+clients/reports_detail.php
+clients/report_detail_print.php
+./cron_dbbackup.php
+
+
+
+UPDATE DATABASE
+
+Penambahan Field nodin_putusan di tabel programs ekseksusi script berikut:
+
+ALTER TABLE `programs` ADD `nodin_putusan` VARCHAR(30) NULL AFTER `approval_by`, ADD INDEX `prgm_nodin_putusan_ndx` (`nodin_putusan`) ;

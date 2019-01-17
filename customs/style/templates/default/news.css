@@ -1,0 +1,88 @@
+div.news-window
+{
+    width: 780px;
+    padding: 10px;
+    float: none;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    border: solid 1px #ccc;
+    border-radius: 10px;
+}
+div.news-form-container
+{
+    float: left;
+    width: 780px;
+    font-size: 13px;
+    display: none;
+}
+div.news-form-container textarea {
+    float: left;
+    height: 40px;
+    width: 700px;
+}
+div.news-form-container input[type=submit]
+{
+    float: right;
+    width: 70px;
+    height: 40px;
+}
+div.news-text-container
+{
+    float: left;
+    width: 780px;
+    font-size: 12px;
+}
+div.form-place{
+    float: left;
+    width: 100%;
+}
+ul.news-main{
+    margin: 0; padding: 0; list-style: none;
+}
+ul.news-main li{
+    float: left; width: 100%;
+    padding: 5px 0 5px 0;
+    border-bottom: dotted 1px #ccc;
+}
+ul.news-main li:last-child{border-bottom: none;}
+div.image-profile{
+    float: left;
+    width: 45px;
+}
+ul.news-main li div.news-content{
+    float: left;
+    margin-left: 20px;
+    width: 715px;
+}
+div.news-content p {margin-top: 0;}
+div.news-content p span.name {color: #00529c; font-weight: bold;}
+div.news-content p span.date {color: #ccc; font-style: italic;}
+div.news-content p.text {color: #333;}
+div.link-comment { float: right; margin-top: 0px;}
+a.comment-create{
+    text-decoration: underline; color: #00529c; font-weight: bold; 
+    font-size: 12px;
+    cursor: pointer;
+}
+ul.news-main li ul {padding: 0; margin: 0 0 0 65px; list-style: none;}
+ul.news-main li ul li{
+    float: left; width: 715px;
+    padding: 5px 0 5px 0;
+    border-top: dotted 1px #ccc;
+    border-bottom: none;
+}
+ul.news-main li ul li div.news-content{
+    float: left;
+    margin-left: 20px;
+    width: 650px;
+}
+div.news-delete{
+    float: right;
+    width: 16px;
+    height: 16px;
+    background: url(images/icon-oknot.png) no-repeat center;
+    cursor: pointer;
+    margin-top: -20px;
+    display: none;
+}

@@ -1,0 +1,65 @@
+@charset "utf-8";
+/* CSS Document */
+
+.tabs-page {
+	width: 100%;
+	float: left;
+	display: block;	        
+}
+.tabs-caption {
+	width: 100%;
+	float: left;
+	display: block;	
+	height: 31px;
+	vertical-align:middle;
+	border-bottom:solid 1px #E7E7E7;
+}
+ul.tabs-caption-list { padding:0; margin:0; list-style:none; width: 100%; background-color: inherit; }
+ul.tabs-caption-list li {
+	padding: 8px;
+	margin-left: 5px;
+	float: left;
+	display:block;
+	text-align:center;
+	font-size: 12px;
+	line-height: 15px;
+	color: #5F5F5F;       
+	cursor: pointer;
+}
+ul.tabs-caption-list li:hover { color: #EA141E; font-weight: bold; }
+ul.tabs-caption-list li.active {
+	font-weight: bold;
+	border-top:solid 1px #E7E7E7;
+	border-right:solid 1px #E7E7E7;
+	border-left:solid 1px #E7E7E7;
+}
+.tabs-content-page {
+	width: 100%;
+	float:left;
+	display:block;	
+}
+div#tabs_container
+{
+	width: 100%; padding:0; float:left; display: block; 	
+	font-size:12px;
+}
+table.tabs
+{
+	float:left;
+	width:100%;
+	border:none;
+	border-spacing:0;	
+	color: #333;
+}
+table.tabs tr:nth-child(2n+1){ background-color:#F1F1F1; }
+table.tabs th
+{ 
+	border-bottom:solid 1px #ccc; 
+	background-color:#333333;
+	color: #FFFFFF;
+	font-weight:bold;
+	font-size:11px;	
+}
+table.tabs td {
+	padding: 5px 10px 5px 10px;	
+}

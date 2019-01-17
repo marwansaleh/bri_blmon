@@ -1,0 +1,132 @@
+@charset "utf-8";
+/* CSS Document */
+
+/*********** buttons ***********/
+.buttons 
+{ 
+	float:left; 
+	min-width: 30px;
+	max-width: 100px;
+	padding:3px 10px 3px 10px;
+	color:#000000;
+	font-weight:bold;
+	font-size:11px;
+	cursor:pointer;
+	text-align:center;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	background:-moz-linear-gradient(top, #f4f6f7, #d6d9db) no-repeat #d6d9db;
+        background:-webkit-gradient(linear, left top, left bottom, from(#f4f6f7), to(#d6d9db)) no-repeat #d6d9db;
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f4f6f7', endColorstr='#d6d9db');
+}
+.buttons:hover { color: #1e398d; }
+/***************buttons in panel *************/
+div#panel-buttons 
+{ 
+    float:left;
+    width:100%;
+    height: 30px;
+    border: solid 1px #000000;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    background:-moz-linear-gradient(top, #d6d9db, #f4f6f7) no-repeat #f4f6f7;
+    background:-webkit-gradient(linear, left top, left bottom, from(#d6d9db), to(#f4f6f7)) no-repeat #f4f6f7;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d6d9db', endColorstr='#f4f6f7');
+}
+div#panel-buttons ul {	padding:0; margin:0; list-style:none; }
+div#panel-buttons ul li
+{ 
+	float:left;
+	height:20px;
+	padding: 5px 20px 5px 20px; 
+	color:#000000; 
+	font-weight:bold; 	
+	text-align:center;
+	line-height:20px;
+	border-right:solid 1px #ccc;
+}
+div#panel-buttons ul li.home
+{
+	padding-left: 30px;
+	cursor:pointer;
+	background:url(images/icon20/home20.png) no-repeat left;
+}
+div#panel-buttons ul li.home:hover { color:#F60; }
+div#panel-buttons ul li.execute
+{
+	cursor:pointer;
+}
+div#panel-buttons ul li.execute:hover { color:#01539C; background:#f8ad3c;}
+div#panel-buttons ul li.active { background:#f8ad3c;}
+div#panel-buttons ul li.search 
+{
+	float:right;
+	padding-right:10px;
+	border-right:none;
+}
+
+div#panel-buttons ul li:first-child, div.panel-buttons ul li:last-child { border-right:none; padding-left:10px; padding-right:10px; }
+div#panel-buttons ul li input { padding:3px 4px 3px 4px; margin-top:-4px; float:left; color:#333; }
+div#panel-buttons ul li .buttons { margin-top:-3px; margin-left:5px; }
+div#panel-buttons ul li .dropdown{
+    padding:1px 4px 1px 4px; margin-top:-1px; color:#333; 
+}
+div#panel-buttons ul li.dropdown:hover{
+    color:#01539C; background:#f8ad3c;
+}
+div#panel-buttons ul li.dropdown ul {
+    display: none;
+    position: absolute;
+    list-style: none;
+    padding: 0; margin: 5px 0 0 -20px;
+    cursor: pointer;
+    width: 130px;
+}
+div#panel-buttons ul li.dropdown ul li{
+    float: left;
+    padding: 5px 10px 5px 10px;
+    border: none;
+    width: 130px;
+    text-align: left;
+    background:#f8ad3c;
+}
+div#panel-buttons ul li.dropdown ul li:hover{
+    color:#ffffff;
+}
+/*
+Button dropdown
+*/
+div.dropdown-menu{
+    float: left;
+    width: 100px;
+    text-align: center;
+    cursor: pointer;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color: #000000;
+    font-weight: bold;
+    font-size: 12px;
+    border: solid 1px #000000;
+    
+    background:-moz-linear-gradient(top, #d6d9db, #f4f6f7) no-repeat #f4f6f7;
+    background:-webkit-gradient(linear, left top, left bottom, from(#d6d9db), to(#f4f6f7)) no-repeat #f4f6f7;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d6d9db', endColorstr='#f4f6f7');
+    z-index: 10000;
+}
+div.dropdown-menu ul {margin:6px 0 0 0; padding: 0; list-style: none; position: absolute; display: none;}
+div.dropdown-menu ul li { 
+    float: left; 
+    width: 94px;
+    text-align: left;
+    padding-top: 5px; padding-bottom: 5px; padding-left: 5px;
+    cursor: pointer;
+    border-left: solid 1px #000000;
+    border-right: solid 1px #000000;
+    background-color: #f4f6f7;
+}
+div.dropdown-menu ul li:hover{
+    background-color: #d6d9db;
+}
+div.dropdown-menu ul li:last-child { border-bottom: solid 1px #000000;}

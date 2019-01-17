@@ -1,0 +1,92 @@
+@charset "utf-8";
+/* CSS Document */
+
+.box-container {
+	background-color:#f4f3f4;
+	background-image:url(images/body-mask.jpg);
+	background-repeat:repeat;
+	
+	border-right: solid 1px #ccc;
+	border-bottom: solid 1px #ccc;
+	
+	-webkit-border-top-left-radius: 25px;
+	-moz-border-radius-topleft: 25px;
+	border-top-left-radius: 25px;
+	
+	height: 320px; width: 320px;
+	padding:10px;
+	float:left;
+        display: inline-block;
+	position:relative;
+	margin-left:20px; margin-right:10pxs; margin-top: 5px;
+}
+.box-container:hover {
+	border-right: solid 1px #999;
+	border-bottom: solid 1px #999;
+}
+.box-container .dashboard-title {
+	width: 100%;
+	text-align:center;
+	clear:both;
+}
+.dashboard-title { cursor:pointer; }
+.dashboard-title:hover { text-decoration:underline;}
+.box-container .dashboard-content {
+	width:310px; 
+	margin-left:auto; margin-right:auto; margin-top:10px;
+	float:none;
+	font-size:11px;
+}
+table.data-dashboard{
+    border: none;
+    float: left;
+    width: 100%;
+    border-spacing: 0px;
+}
+table.data-dashboard tr{
+    background-color: #f2f2f2;
+}
+table.data-dashboard tr:nth-child(2n+1){
+    background-color: #fcf7f7;
+}
+table.data-dashboard th
+{
+    padding: 8px 5px 8px 5px;
+    font-weight: bold;
+    border-top: solid 1px #d6d9db;
+    border-bottom: solid 1px #d6d9db;
+    border-left: solid 1px #d6d9db;
+}
+table.data-dashboard th:first-child{border-left:none;}
+table.data-dashboard td
+{
+    padding: 8px 5px 8px 5px;
+    border-bottom: solid 1px #f2f2f2;
+}
+div.dashboard-title a, table.data-dashboard a{text-decoration: underline; color: inherit;}
+
+/*Slider box*/
+div.slider-container{
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    float: left;
+}
+div.slider-content{
+    width: 100%;
+    float: left;
+}
+div.slider-btn-up{
+    float: right;
+    background: url(images/slide-up.png) no-repeat center;
+    width: 13px;
+    height: 15px;
+    cursor: pointer;
+}
+div.slider-btn-down{
+    float: right;
+    background: url(images/slide-bottom.png) no-repeat center;
+    width: 13px;
+    height: 15px;
+    cursor: pointer;
+}

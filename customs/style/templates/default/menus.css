@@ -1,0 +1,78 @@
+#panel-mainmenu
+{
+    width: 100%;
+    height: 50px;
+    float: left;
+    /*
+    background: url(images/panel-bg.png) repeat-x;    
+    */
+    background:-moz-linear-gradient(top, #f4f6f7, #d6d9db) no-repeat #d6d9db;
+    background:-webkit-gradient(linear, left top, left bottom, from(#f4f6f7), to(#d6d9db)) no-repeat #d6d9db;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f4f6f7', endColorstr='#d6d9db');
+}
+
+ul#mainmenu {
+    margin: 15px 0 0 20px; padding: 0; list-style: none;
+}
+ul#mainmenu li {
+    float: left;
+    padding: 5px 10px 5px 10px;
+    line-height: 15px;
+    margin-left: 10px;
+    font-weight: bold;
+    font-size: 12px;
+    cursor: pointer;
+    /*background-color: #c1c1c9;*/
+    color: #3c3a4f;
+}
+ul#mainmenu li a{ color: #000000; text-decoration: none;}
+ul#mainmenu li:hover, ul#mainmenu li a:hover{
+    color: #f4b14b;
+}
+ul#mainmenu li.right {
+    float: right; margin-right: 10px; margin-left: 0;    
+}
+ul#mainmenu li.active {
+    background-color: #7aa3c9;
+}
+ul#mainmenu li.head-link{
+    text-align: left;
+    text-indent: 10px;
+    width:100px;     
+}
+div.arrow-bottom{
+    background: url(images/arrow-bottom.png) no-repeat center;
+    width: 13px;
+    height: 15px;
+    float: right;
+    margin-right: 5px;
+}
+div.submenu
+{
+    float: left;
+    width: 150px;
+    margin: 5px 0 0 -40px;
+    background-color: #7aa3c9; 
+    position: absolute; z-index: 1000;
+    display: none;
+}
+ul.submenu {
+    margin: 0; 
+    padding: 0; 
+    list-style: none;
+}
+ul.submenu li {
+    float: left;
+    padding: 10px 0 10px 0;
+    padding-left: 0;
+    padding-right: 0;
+    width: 120px;
+    margin-left: -30px;
+}
+ul.submenu li a {
+    color: #000000;
+    text-decoration: none;
+}
+ul.submenu li:hover, ul.submenu li a:hover{
+    color: #f4b14b;
+}

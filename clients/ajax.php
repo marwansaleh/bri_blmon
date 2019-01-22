@@ -1354,6 +1354,8 @@ function loadProgramsByWilayah($page)
         $kanwil_id_like = get_kanwil_id_by_searching($search_string, $db_obj);
     }
     $num_of_recs = 7;
+    $state = $_POST['state'];
+    
     //count all pages
     if ($wilayah>0)
         $sql = "SELECT COUNT(*) FROM programs p, uker u, kabupaten k, propinsi pr WHERE (p.uker_wilayah=$wilayah)AND(p.uker=u.id)AND(u.propinsi=pr.id)AND(u.kabupaten=k.id)";
@@ -1372,6 +1374,9 @@ function loadProgramsByWilayah($page)
             $sql.= "OR(p.uker_wilayah IN (". implode(",",$kanwil_id_like)."))";
         
         $sql.=")";
+    }
+    if ($state>=0){
+        $sql.=" AND(p.state=$state)";
     }
     
     $found = $db_obj->singleValueFromQuery($sql);
@@ -1405,6 +1410,9 @@ function loadProgramsByWilayah($page)
                 $sql.= "OR(p.uker_wilayah IN (". implode(",",$kanwil_id_like)."))";
         
             $sql.=")";
+        }
+        if ($state>=0){
+            $sql.=" AND(p.state=$state)";
         }
         $sql.= " ORDER BY p.creation_date DESC, p.approval_date DESC
                 LIMIT $start, $num_of_recs";

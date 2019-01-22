@@ -90,11 +90,16 @@ if (isset($qs[1]))
                 $('div#btn_search_content').click();
             }			
 	});
+        $('select#state').change(function(){
+            loadPrograms(0, $('select#wilayah').val(), $('input#keyword').val());
+        });
     })
     function loadPrograms(page,wilayah,keyword)
     {        
         $('div#my-loader').show();
-        $.post("ajax",{input_function:'loadProgramsByWilayah',param:page,wilayah:wilayah,search_str:keyword},function(result){
+        var state_approval = $('select#state').val();
+        
+        $.post("ajax",{input_function:'loadProgramsByWilayah',param:page,wilayah:wilayah,search_str:keyword,state:state_approval},function(result){
             $('div#my-loader').hide();
             data = jQuery.parseJSON(result);
             //empty table
@@ -323,7 +328,7 @@ if (isset($qs[1]))
     
     <div id="panel-content">
         <div class="content">
-            <h1>Program CSR BRI - Berdasarkan Wilayah</h1>
+            <h1>Program BL BRI - Berdasarkan Wilayah</h1>
             <div id="panel-buttons">
                 <ul>
                     <li>&raquo;</li>
@@ -339,6 +344,13 @@ if (isset($qs[1]))
                             }
                             ?>
                             <option value="-1">SEMUA WILAYAH</option>
+                        </select>
+                    </li>
+                    <li class="dropdown">
+                        <select id="state" name="state">  
+                            <option value="-1">Status</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
                         </select>
                     </li>
                     <?php if (userHasAccess($access, "PROGRAM_CREATE")){?>

@@ -351,7 +351,7 @@ if (isset($qs[1]))
     
     <div id="panel-content">
         <div class="content">
-            <h1>Program CSR BRI - Berdasarkan Kategori</h1>
+            <h1>Program BL BRI - Berdasarkan Kategori</h1>
             <div id="panel-buttons">
                 <ul>
                     <li>&raquo;</li>

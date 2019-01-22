@@ -70,6 +70,7 @@ switch($function)
     case 'loadAreas': loadAreas($param); break;
     case 'export_to_excel': export_to_excel($param); break;
     case 'export_filtered_programs': export_filtered_programs(); break;
+    case 'export_filtered_wilayah': export_filtered_wilayah(); break;
     case 'download_backup': download_backup(); break;
     //RKAP
     case 'saveRKAP': saveRKAP($param); break;
@@ -2719,9 +2720,195 @@ function export_filtered_programs()
             p.state, u.uker, pr.propinsi, k.kabupaten, p.benef_name,p.benef_address,p.benef_phone, p.benef_email, p.benef_orang, p.benef_unit, 
             DATE(p.creation_date) as creation_date, us.full_name as creation_by, 
             DATE(p.approval_date) as approval_date, p.budget,p.nodin_putusan,p.nomor_persetujuan,p.nomor_registrasi,
+            p.tgl_putusan,p.tgl_register,p.nomor_bg,
             p.operational, p.creation_by as creation_by_id, u.propinsi as propinsi_id
             FROM programs p, uker u, users us, propinsi pr, kabupaten k, program_types pt
             WHERE (p.uker=u.id)AND(u.propinsi=pr.id)AND(u.kabupaten=k.id)AND(p.creation_by=us.id)AND(p.type=pt.id)";
+    if ($year_creation){
+        $sql.= " AND(YEAR(p.creation_date)=$year_creation)";
+    }
+    if (isset($search_string))
+    {
+        $sql.=" AND ((MATCH(p.name,p.description) AGAINST ('$search_string'))OR(p.name LIKE '%$search_string%')
+                OR(u.uker LIKE '%$search_string%')OR(k.kabupaten LIKE '%$search_string%')
+                OR(k.ibukota LIKE '%$search_string%')
+                OR(pr.propinsi LIKE '%$search_string%')
+                OR(pr.ibukota LIKE '%$search_string%')
+                OR(p.benef_name LIKE '%$search_string%')
+                OR(p.nodin_putusan LIKE '%$search_string%')
+		OR(p.nomor_registrasi LIKE '%$search_string%')
+		OR(p.nomor_persetujuan LIKE '%$search_string%')";
+        if ($kanwil_id_like)
+            $sql.= "OR(p.uker_wilayah IN (". implode(",",$kanwil_id_like)."))";
+
+        $sql.=")";
+    }
+    if ($type>0) {
+        $sql.= " AND(p.type=$type)";
+    }
+
+    if ($state>=0) {
+        $sql.=" AND(p.state=$state)";
+    }
+
+    $sql.= " ORDER BY p.creation_date DESC, p.approval_date DESC";
+    $result = $db_obj->fetch_obj($sql);
+
+    $arr = array();
+    if ($result)
+    {
+        foreach($result as $item)
+        {
+            $item->progress = program_progress($item->id, $db_obj);
+            $item->real_used = program_real_fund_used($item->id, $db_obj);
+            $arr[] = $item;
+        }
+    }
+    
+    require APP_BASE_PATH . 'funcs/PHPExcel.php';
+    /*
+     * Start writing excel file
+     */
+    $Excel = new PHPExcel();
+    $Excel->getProperties()->setCreator('PT. Bank Rakyat Indonesia, Tbk.')
+            ->setLastModifiedBy('Div. Corporate Secretary')
+            ->setTitle('Data Program Bina Lingkungan PT. Bank Rakyat Indonesia');
+    
+    //create header
+    $Excel->setActiveSheetIndex(0);
+    $Excel->getActiveSheet()->setShowGridlines(TRUE);
+
+    //Set Title
+    $Excel->getActiveSheet()->setCellValue('A1', 'DAFTAR PROGRAM BINA LINGKUNGAN PT. BANK RAKYAT INDONESIA, TBK.');
+    
+    $row = 3;
+    $col = 'A';
+    
+    // Buat Nama Kolom
+    $Excel->getActiveSheet()
+            ->setCellValue($col++.$row, 'NO.')
+            ->setCellValue($col++.$row, 'PROGRAM_ID')
+            ->setCellValue($col++.$row, 'NAMA_PROGRAM')
+            ->setCellValue($col++.$row, 'KELOMPOK_PROGRAM')
+            ->setCellValue($col++.$row, 'BIDANG_ID')
+            ->setCellValue($col++.$row, 'NAMA_BIDANG')
+            ->setCellValue($col++.$row, 'BESAR_ANGGARAN')
+            ->setCellValue($col++.$row, 'DANA_OPERASIONAL')
+            ->setCellValue($col++.$row, 'UNIT_KERJA')
+	    ->setCellValue($col++.$row, 'WILAYAH')
+            ->setCellValue($col++.$row, 'KABUPATEN')
+            ->setCellValue($col++.$row, 'PROVINSI')
+            ->setCellValue($col++.$row, 'PENERIMA_MANFAAT')
+            ->setCellValue($col++.$row, 'ALAMAT_PENERIMA')
+            ->setCellValue($col++.$row, 'TELEPON_PENERIMA')
+            ->setCellValue($col++.$row, 'EMAIL_PENERIMA')
+            ->setCellValue($col++.$row, 'JLH_ORANG')
+            ->setCellValue($col++.$row, 'JLH_UNIT')
+            ->setCellValue($col++.$row, 'TGL_PEMBUATAN')
+            ->setCellValue($col++.$row, 'DESKRIPSI')
+            ->setCellValue($col++.$row, 'POTENSI')
+            ->setCellValue($col++.$row, 'REALISASI')
+            ->setCellValue($col++.$row, 'PROGRESS')
+            ->setCellValue($col++.$row, 'STATUS')
+            ->setCellValue($col++.$row, 'NODIN_PUTUSAN')
+            ->setCellValue($col++.$row, 'TGL_PUTUSAN')
+            ->setCellValue($col++.$row, 'NOMOR_PERSETUJUAN')
+            ->setCellValue($col++.$row, 'TGL_PERSETUJUAN')
+            ->setCellValue($col++.$row, 'NOMOR_REGISTER')
+            ->setCellValue($col++.$row, 'TGL_REGISTER')
+            ->setCellValue($col++.$row, 'NOMOR_BG')
+            ->setCellValue($col++.$row, 'PIC');
+    
+    // ISI DATA PROGRAM
+    if (count($arr)) {
+	$kanwil_arr = get_kanwil_arr($db_obj);
+
+        foreach ($arr as $item) {
+            $col = 'A'; $row++;
+            
+            $Excel->getActiveSheet()
+                    ->setCellValue($col++.$row, $row-1)
+                    ->setCellValue($col++.$row, $item->id)
+                    ->setCellValue($col++.$row, $item->name)
+                    ->setCellValue($col++.$row, $item->source==0?'BRI Perduli':'BUMN Perduli')
+                    ->setCellValue($col++.$row, $item->type)
+                    ->setCellValue($col++.$row, $item->type_name)
+                    ->setCellValue($col++.$row, $item->budget)
+                    ->setCellValue($col++.$row, $item->operational)
+                    ->setCellValue($col++.$row, $item->uker)
+		    ->setCellValue($col++.$row, $kanwil_arr[$item->uker_wilayah])
+                    ->setCellValue($col++.$row, $item->kabupaten)
+                    ->setCellValue($col++.$row, $item->propinsi)
+                    ->setCellValue($col++.$row, $item->benef_name)
+                    ->setCellValue($col++.$row, $item->benef_address)
+                    ->setCellValue($col++.$row, $item->benef_phone)
+                    ->setCellValue($col++.$row, $item->benef_email)
+                    ->setCellValue($col++.$row, $item->benef_orang)
+                    ->setCellValue($col++.$row, $item->benef_unit)
+                    ->setCellValue($col++.$row, $item->creation_date)
+                    ->setCellValue($col++.$row, $item->description)
+                    ->setCellValue($col++.$row, $item->potensi_bisnis)
+                    ->setCellValue($col++.$row, $item->real_used)
+                    ->setCellValue($col++.$row, $item->progress)
+                    ->setCellValue($col++.$row, $item->state==0?'NO':'YES')
+                    ->setCellValue($col++.$row, $item->nodin_putusan)
+                    ->setCellValue($col++.$row, $item->tgl_putusan)
+                    ->setCellValue($col++.$row, $item->nomor_persetujuan)
+                    ->setCellValue($col++.$row, $item->approval_date)
+                    ->setCellValue($col++.$row, $item->nomor_registrasi)
+                    ->setCellValue($col++.$row, $item->tgl_register)
+                    ->setCellValue($col++.$row, $item->nomor_bg)
+                    ->setCellValue($col++.$row, $item->pic);
+        }
+    }
+
+    $ExcelWriter = PHPExcel_IOFactory::createWriter($Excel, 'Excel2007');
+    $filename = 'program_exported_'.date('Y-m-d-His').'.xlsx';
+    if (is_writable(sys_get_temp_dir())){
+        $filename_full_path = sys_get_temp_dir() .'/'. $filename;
+    }else{
+        $filename_full_path = APP_BASE_PATH. 'temp/'.$filename;
+    }
+    
+    $return = new stdClass();
+    $return->status = FALSE;
+    try{
+        $ExcelWriter->save($filename_full_path);
+        $return->status = TRUE;
+        $return->filename = urlencode(base64_encode($filename_full_path));
+    } catch (Exception $ex) {
+        $return->message = $ex->getMessage();
+    }
+
+
+    echo json_encode($return);
+}
+function export_filtered_wilayah()
+{
+    set_time_limit(0);
+    $db_obj = new DatabaseConnection();
+    if (isset($_POST['search_str'])&&$_POST['search_str']!='')
+    {
+        $search_string = $_POST['search_str'];
+        //get all kanwil for searching
+        $kanwil_id_like = get_kanwil_id_by_searching($search_string, $db_obj);
+    }
+    $wilayah = $_POST['wilayah'];
+    $type= $_POST['type'];
+    $state = $_POST['state'];
+    $year_creation = isset($_POST['creation_year']) ? $_POST['creation_year'] : NULL;
+    
+    $sql = "SELECT p.id, p.source,p.type,pt.type as type_name, p.name, p.description,p.potensi_bisnis, p.pic, p.uker_wilayah, p.uker_cabang,
+            p.state, u.uker, pr.propinsi, k.kabupaten, p.benef_name,p.benef_address,p.benef_phone, p.benef_email, p.benef_orang, p.benef_unit, 
+            DATE(p.creation_date) as creation_date, us.full_name as creation_by, 
+            DATE(p.approval_date) as approval_date, p.budget,p.nodin_putusan,p.nomor_persetujuan,p.nomor_registrasi,
+            p.tgl_putusan, tgl_register, nomor_bg,
+            p.operational, p.creation_by as creation_by_id, u.propinsi as propinsi_id
+            FROM programs p, uker u, users us, propinsi pr, kabupaten k, program_types pt
+            WHERE (p.uker=u.id)AND(u.propinsi=pr.id)AND(u.kabupaten=k.id)AND(p.creation_by=us.id)AND(p.type=pt.id)";
+    if ($wilayah>0){
+        $sql.=" AND(p.uker_wilayah=$wilayah)";
+    }
     if ($year_creation){
         $sql.= " AND(YEAR(p.creation_date)=$year_creation)";
     }

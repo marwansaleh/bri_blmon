@@ -93,6 +93,23 @@ if (isset($qs[1]))
         $('select#state').change(function(){
             loadPrograms(0, $('select#wilayah').val(), $('input#keyword').val());
         });
+        $('li#btn_export').click(function(){
+            $('div#my-loader').show();
+            var p_wilayah = $('select#wilayah').val();
+            var p_search = $('input#keyword').val();
+            var p_state = $('select#state').val();
+            $.post("ajax",{input_function:'export_filtered_wilayah',wilayah:p_wilayah,search_str:p_search,state:p_state},function(result){
+                $('div#my-loader').hide();
+                var data = jQuery.parseJSON(result);
+                
+                if (data.status) {
+                    var exp_wdw = window.open("get_excel_alt?filename="+data.filename,"ExportedWindow");
+                    exp_wdw.focus();
+                }else {
+                    alert(data.message);
+                }
+            });
+        });
     })
     function loadPrograms(page,wilayah,keyword)
     {        
@@ -247,8 +264,9 @@ if (isset($qs[1]))
                 if (confirm("Hapus data record terpilih ?")){
                     deleteRecords(id);
                 }
-            })
-        })
+            });
+            
+        });
     }
     function programTask(program_id)
     {
@@ -367,6 +385,7 @@ if (isset($qs[1]))
                             <div id="btn_search_content" class="buttons" 
                                  lang="<?php echo cur_page_name(false);?>">Search</div>
                     </li>  
+                    <li class="execute" id="btn_export">Export</li>
                 </ul>
             </div>
         </div>   

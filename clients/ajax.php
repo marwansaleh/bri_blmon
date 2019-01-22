@@ -2450,17 +2450,20 @@ function loadAllBackups()
 }
 function createBackup()
 {
-    $backup_folder = "../db_backup/";
+    $backup_folder = APP_BASE_PATH."db_backup/";
     //check if folder exists, if not, create one
     if (!file_exists($backup_folder))
         mkdir($backup_folder, 0775);
     
     $filename = time().'.sql';
-    $result = exec("mysqldump -h ".DB_HOST." -u ".DB_USER." -p".DB_PWD." ".DB_NAME." > $backup_folder$filename");
-    if (strlen(trim($result))>0)
-        echo trim($result);
+    $execute_commands = "mysqldump -h ".DB_HOST." -u ".DB_USER." -p".DB_PWD." ".DB_NAME." > $backup_folder$filename";
+    $execute_output =[];
+    $execute_return = '';
+    $result = exec($execute_commands, $execute_output, $execute_return);
+    if (file_exists($backup_folder . $filename))
+        echo json_encode (array('status'=>TRUE));
     else
-        echo '';
+        echo json_encode (array('status'=>FALSE, 'message'=>'Gagal backup database dengan pesan: '. implode(' | ', $execute_output).' || status code '. $execute_return));
 }
 function deleteBackups($id_list)
 {

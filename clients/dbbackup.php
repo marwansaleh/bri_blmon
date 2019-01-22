@@ -137,8 +137,14 @@ $access = loadUserAccess($db_obj);
         $('div#my-loader').show();
         $.post("ajax",{input_function:'createBackup'},function(result){
             $('div#my-loader').hide();
-            loadAllBackups();
-        })
+            
+            var data = jQuery.parseJSON(result);
+            if (!data.status) {
+                alert(data.message);
+            } else {
+                loadAllBackups();
+            }
+        });
     }
     function restoreDatabase(filename)
     {

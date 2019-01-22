@@ -12,7 +12,7 @@ array_shift($qs);
 
 //check security uri, must do in every page
 //to avoid http injection
-$max_parameter_alllowed = 2;
+$max_parameter_alllowed = 4;
 security_uri_check($max_parameter_alllowed, $qs);
 
 $db_obj = new DatabaseConnection();
@@ -213,7 +213,7 @@ $access = loadUserAccess($db_obj);
         </div>   
         <div class="clr"></div>
         <div class="content">
-            <!--<p><strong>NB: Rp dalam ribuan</strong></p>-->
+            <p><strong>NB: Rp dalam ribuan</strong></p>
             <table class="data-list">                
                 <tr></tr>
             </table>

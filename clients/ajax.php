@@ -130,7 +130,9 @@ function loadPrograms($page)
                 OR(pr.propinsi LIKE '%$search_string%')
                 OR(pr.ibukota LIKE '%$search_string%')
                 OR(p.benef_name LIKE '%$search_string%')
-                OR(p.nodin_putusan LIKE '%$search_string%')";
+				OR(p.nodin_putusan LIKE '%$search_string%')
+				OR(p.nomor_registrasi LIKE '%$search_string%')
+				OR(p.nomor_persetujuan LIKE '%$search_string%')";
         
         if ($kanwil_id_like)
             $sql.= "OR(p.uker_wilayah IN (". implode(",",$kanwil_id_like)."))";
@@ -169,7 +171,9 @@ function loadPrograms($page)
                     OR(pr.propinsi LIKE '%$search_string%')
                     OR(pr.ibukota LIKE '%$search_string%')
                     OR(p.benef_name LIKE '%$search_string%')
-                    OR(p.nodin_putusan LIKE '%$search_string%')";
+					OR(p.nodin_putusan LIKE '%$search_string%')
+					OR(p.nomor_registrasi LIKE '%$search_string%')
+					OR(p.nomor_persetujuan LIKE '%$search_string%')";
             if ($kanwil_id_like)
                 $sql.= "OR(p.uker_wilayah IN (". implode(",",$kanwil_id_like)."))";
         
@@ -295,15 +299,28 @@ function savePrograms($mode)
     if ($_POST['approval_date']!='')
         $approval_date = $_POST['approval_date'];
     else
-        $approval_date = date("Y-m-d H:i:s");
-    $nodin_persetujuan = trim($_POST['nodin_persetujuan']);
+        $approval_date = NULL;
+    $nodin_putusan = trim($_POST['nodin_putusan']);
+    $nomor_persetujuan = trim($_POST['nomor_persetujuan']);
+    $nomor_registrasi = trim($_POST['nomor_registrasi']);
+    $nomor_bg = trim($_POST['nomor_bg']);
+    if ($_POST['tgl_putusan']!='') {
+        $tgl_putusan = $_POST['tgl_putusan'];
+    }else{
+        $tgl_putusan = NULL;
+    }
+    if ($_POST['tgl_register']!='') {
+        $tgl_register = $_POST['tgl_register'];
+    }else{
+        $tgl_register = NULL;
+    }
     
     $result = array("success"=>false, "error"=>"", "program_id"=>$id, "upload"=>false, "upload_info"=>array("id"=>0,"filename"=>"","filetype"=>""));
     if ($id==0)
     {
         $sql = "INSERT INTO programs 
-                (name, source, description, potensi_bisnis, type, budget,operational,benef_name,benef_address,benef_phone,benef_email,benef_orang,benef_unit,pic,uker, uker_wilayah,uker_cabang,creation_date,creation_by,last_update_by,approval_by,nodin_persetujuan)VALUES
-                ('$name',$source,'$description','$potensi_bisnis',$type,$budget,$operational,'$benef_name','$benef_address','$benef_phone','$benef_email',$benef_orang,$benef_unit,'$pic',$uker, $uker_wilayah,$uker_cabang,'$creation_date',".get_user_info("ID").",".get_user_info("ID").",".get_user_info("ID").",'$nodin_persetujuan')";
+                (name, source, description, potensi_bisnis, type, budget,operational,benef_name,benef_address,benef_phone,benef_email,benef_orang,benef_unit,pic,uker, uker_wilayah,uker_cabang,creation_date,creation_by,last_update_by,approval_by,nodin_putusan,nomor_persetujuan,nomor_registrasi,tgl_putusan,tgl_register,nomor_bg)VALUES
+                ('$name',$source,'$description','$potensi_bisnis',$type,$budget,$operational,'$benef_name','$benef_address','$benef_phone','$benef_email',$benef_orang,$benef_unit,'$pic',$uker, $uker_wilayah,$uker_cabang,'$creation_date',".get_user_info("ID").",".get_user_info("ID").",".get_user_info("ID").",'$nodin_putusan','$nomor_persetujuan','$nomor_registrasi','$tgl_putusan,'$tgl_register','$nomor_bg')";
     }else{
         //check if already approve (state=1) and budget change
         //modified saldo also
@@ -324,7 +341,9 @@ function savePrograms($mode)
                 type=$type,budget=$budget,operational=$operational,benef_name='$benef_name',benef_address='$benef_address',                
                 benef_phone='$benef_phone',benef_email='$benef_email',benef_orang=$benef_orang,benef_unit=$benef_unit,
                 pic='$pic',uker=$uker,uker_wilayah=$uker_wilayah,uker_cabang=$uker_cabang,
-                creation_date='$creation_date',approval_date='$approval_date',nodin_persetujuan='$nodin_persetujuan',
+                creation_date='$creation_date',approval_date='$approval_date',nodin_putusan='$nodin_putusan',
+                nomor_persetujuan='$nomor_persetujuan',nomor_registrasi='$nomor_registrasi',
+                tgl_putusan='$tgl_putusan',tgl_register='$tgl_register',nomor_bg='$nomor_bg',
                 last_update_by=".get_user_info("ID")."
                 WHERE id=$id";
     }
@@ -2691,7 +2710,7 @@ function export_filtered_programs()
     $sql = "SELECT p.id, p.source,p.type,pt.type as type_name, p.name, p.description,p.potensi_bisnis, p.pic, p.uker_wilayah, p.uker_cabang,
             p.state, u.uker, pr.propinsi, k.kabupaten, p.benef_name,p.benef_address,p.benef_phone, p.benef_email, p.benef_orang, p.benef_unit, 
             DATE(p.creation_date) as creation_date, us.full_name as creation_by, 
-            DATE(p.approval_date) as approval_date, p.budget,p.nodin_putusan,
+            DATE(p.approval_date) as approval_date, p.budget,p.nodin_putusan,p.nomor_persetujuan,p.nomor_registrasi,
             p.operational, p.creation_by as creation_by_id, u.propinsi as propinsi_id
             FROM programs p, uker u, users us, propinsi pr, kabupaten k, program_types pt
             WHERE (p.uker=u.id)AND(u.propinsi=pr.id)AND(u.kabupaten=k.id)AND(p.creation_by=us.id)AND(p.type=pt.id)";
@@ -2706,7 +2725,9 @@ function export_filtered_programs()
                 OR(pr.propinsi LIKE '%$search_string%')
                 OR(pr.ibukota LIKE '%$search_string%')
                 OR(p.benef_name LIKE '%$search_string%')
-                OR(p.nodin_putusan LIKE '%$search_string%')";
+                OR(p.nodin_putusan LIKE '%$search_string%')
+		OR(p.nomor_registrasi LIKE '%$search_string%')
+		OR(p.nomor_persetujuan LIKE '%$search_string%')";
         if ($kanwil_id_like)
             $sql.= "OR(p.uker_wilayah IN (". implode(",",$kanwil_id_like)."))";
 
@@ -2728,8 +2749,8 @@ function export_filtered_programs()
     {
         foreach($result as $item)
         {
-            $item->progress = number_format(program_progress($item->id, $db_obj),2,",",".");
-            $item->real_used = number_format(program_real_fund_used($item->id, $db_obj),2,",",".");
+            $item->progress = program_progress($item->id, $db_obj);
+            $item->real_used = program_real_fund_used($item->id, $db_obj);
             $arr[] = $item;
         }
     }
@@ -2771,13 +2792,18 @@ function export_filtered_programs()
             ->setCellValue($col++.$row, 'JLH_ORANG')
             ->setCellValue($col++.$row, 'JLH_UNIT')
             ->setCellValue($col++.$row, 'TGL_PEMBUATAN')
-            ->setCellValue($col++.$row, 'TGL_PERSETUJUAN')
             ->setCellValue($col++.$row, 'DESKRIPSI')
             ->setCellValue($col++.$row, 'POTENSI')
             ->setCellValue($col++.$row, 'REALISASI')
             ->setCellValue($col++.$row, 'PROGRESS')
             ->setCellValue($col++.$row, 'STATUS')
             ->setCellValue($col++.$row, 'NODIN_PUTUSAN')
+            ->setCellValue($col++.$row, 'TGL_PUTUSAN')
+            ->setCellValue($col++.$row, 'NOMOR_PERSETUJUAN')
+            ->setCellValue($col++.$row, 'TGL_PERSETUJUAN')
+            ->setCellValue($col++.$row, 'NOMOR_REGISTER')
+            ->setCellValue($col++.$row, 'TGL_REGISTER')
+            ->setCellValue($col++.$row, 'NOMOR_BG')
             ->setCellValue($col++.$row, 'PIC');
     
     // ISI DATA PROGRAM
@@ -2807,13 +2833,18 @@ function export_filtered_programs()
                     ->setCellValue($col++.$row, $item->benef_orang)
                     ->setCellValue($col++.$row, $item->benef_unit)
                     ->setCellValue($col++.$row, $item->creation_date)
-                    ->setCellValue($col++.$row, $item->approval_date)
                     ->setCellValue($col++.$row, $item->description)
                     ->setCellValue($col++.$row, $item->potensi_bisnis)
                     ->setCellValue($col++.$row, $item->real_used)
                     ->setCellValue($col++.$row, $item->progress)
                     ->setCellValue($col++.$row, $item->state==0?'NO':'YES')
                     ->setCellValue($col++.$row, $item->nodin_putusan)
+                    ->setCellValue($col++.$row, $item->tgl_putusan)
+                    ->setCellValue($col++.$row, $item->nomor_persetujuan)
+                    ->setCellValue($col++.$row, $item->approval_date)
+                    ->setCellValue($col++.$row, $item->nomor_registrasi)
+                    ->setCellValue($col++.$row, $item->tgl_register)
+                    ->setCellValue($col++.$row, $item->nomor_bg)
                     ->setCellValue($col++.$row, $item->pic);
         }
     }

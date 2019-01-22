@@ -1,6 +1,5 @@
 <?php 
 require_once("./../funcs/database.class.php"); 
-require_once("./../funcs/tools.php"); 
 require_once("./../funcs/functions.php"); 
 require_once("./../funcs/constant.php"); 
 

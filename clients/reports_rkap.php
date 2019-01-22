@@ -84,16 +84,13 @@ function get_rkap_year(DatabaseConnection $db_obj=NULL)
         $('div#content-data').empty();
         $.post("ajax",{input_function:'loadRKAP_Report',param:year,triwulan:triwulan},function(result){
             $('div#my-loader').hide();
-            create_table_header(triwulan);
-            //empty data view table
-            /*
-            $("table.data-list tr.row-msg").each(function(){
-                $(this).remove();
-            });
-            */
+            
             //extract data as JSON
             var data = jQuery.parseJSON(result);
             if (data['found']>0){
+                //create table data skeleton
+                create_table_header(triwulan);
+                
                 var category_check = 0;
                 var category_num = 0;
                 var item_num = 0;
@@ -234,8 +231,8 @@ function get_rkap_year(DatabaseConnection $db_obj=NULL)
                     }
                 }
             }else{
-                s = "<tr class='row-msg'><td colspan='12'>Data tidak ditemukan</td></tr>";
-                $('table.data-list').append(s);
+                s = "Data tidak ditemukan";
+                $('div#content-data').append(s);
             }
         })
     }

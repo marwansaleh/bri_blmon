@@ -13,8 +13,8 @@ if (isset($_POST['btnLogin']))
     //use original value of input value
     
     //store user input into variable
-    $username = mysql_escape_string($_POST['i_username']);
-    $password = mysql_escape_string($_POST['i_password']);
+    $username = mysql_real_escape_string($_POST['i_username'], $db_obj->connection);
+    $password = mysql_real_escape_string($_POST['i_password'], $db_obj->connection);
     
     //check login
     $login_error_msg="";
@@ -63,6 +63,9 @@ if (isLoggedin()){
             <div class="login-error"><?php echo (isset($login_error_msg)?$login_error_msg:'');?></div>
         </div>
     </div><div class="clr"></div>
-    <div class="copyright">Copyright &copy; PT. Bank Rakyat Indonesia, Tbk. 2012</div>
+    <div class="copyright">
+        <span style='font-style:italic;'>Best view with Google Chrome and Mozilla Firefox 4+</span><br />
+        <p>Copyright &copy; PT. Bank Rakyat Indonesia, Tbk. 2012</p>
+    </div>
 </body>
 </html>

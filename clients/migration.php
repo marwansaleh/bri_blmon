@@ -7,12 +7,12 @@ require_once("./../funcs/database.class_new.php");
 define('SOURCE_HOST', 'localhost');
 define('SOURCE_DB', 'bri_csr_lama');
 define('SOURCE_USER', 'root');
-define('SOURCE_PWD', 'password');
+define('SOURCE_PWD', '');
 
 define('TARGET_HOST', 'localhost');
 define('TARGET_DB', 'bri_csr');
 define('TARGET_USER', 'root');
-define('TARGET_PWD', 'password');
+define('TARGET_PWD', '');
 
 $db_source = new Database(SOURCE_DB, SOURCE_USER, SOURCE_PWD, SOURCE_HOST);
 $db_target = new Database(TARGET_DB, TARGET_USER, TARGET_PWD, TARGET_HOST);
@@ -81,7 +81,7 @@ foreach ($source_programs as $sp){
                     'program'       => $inserted_program_id,
                     'caption'       => $br->caption,
                     'nominal'       => $br->nominal,
-                    'creation_date' => $br->creation_date,
+                    'creattion_date'=> $br->creation_date,
                     'creation_by'   => $br->creation_by,
                     'last_update'   => $br->last_update,
                     'last_update_by'=> $br->last_update_by
@@ -96,9 +96,7 @@ foreach ($source_programs as $sp){
         //Update migration table
         $migration_status = array(
             'migrated'      => time(),
-            'hash'          => $hash,
-	    'source_program_id' => $sp->id,
-	    'target_program_id' => $inserted_program_id
+            'hash'          => $hash
         );
         $db_target->insert($migration_status, 'migration_programs');
     }

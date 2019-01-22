@@ -12,7 +12,7 @@ array_shift($qs);
 
 //check security uri, must do in every page
 //to avoid http injection
-$max_parameter_alllowed = 2;
+$max_parameter_alllowed = 4;
 security_uri_check($max_parameter_alllowed, $qs);
 
 if (isset($qs[1])){
@@ -194,19 +194,23 @@ $access = loadUserAccess($db_obj);
         $('div#my-loader').show();
         $.post("ajax",{input_function:'deleteRealisation',param:id_array.join()},function(result){
             $('div#my-loader').hide();
-			if (parseInt(result)==1)
-			{
-				for(var i=0; i<id_array.length; i++)
-				{
-					$('tr#'+id_array[i]).remove();
-				}
-				$('tr.row-msg').each ( function (index)
-				{
-					$('td', this).eq(1).text(index+1);
-				});
-				
-				//alert("Record deleted successfully!");
-			}else alert(result.substr(1));
+            var result = jQuery.parseJSON(result);
+            for(var i in result['success_id'])
+            {				
+                //remove message rows in the table
+		$('tr.row-msg').each ( function ()
+                {
+                    if ($(this).attr('id')==result['success_id'][i])
+                        $(this).remove();
+                });
+                //renumbering
+		$('tr.row-msg').each ( function (index)
+		{
+                    $('td', this).eq(1).text(index+1);
+		});
+            }
+            if (result['error_message']!='')
+                alert(result['error_message']);
         })
     }
 </script>
@@ -263,9 +267,7 @@ $access = loadUserAccess($db_obj);
                     <th>Dibuat Tgl</th>
                     <th>Oleh</th>
                     <th>Last Update</th>
-					<!--
-                    <th>Update oleh</th>
-					-->
+                    <!--<th>Update oleh</th>-->
                     <th>Action</th>
                 </tr>
                 <tr class="row-msg"><td colspan="9"></td></tr>

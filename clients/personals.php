@@ -128,8 +128,8 @@ if (isset($qs[1]))
                     var operational = data['items'][i]['operational']*1;
                     s+="<td align='right'>"+operational.formatMoney(2,',','.')+"</td>";
                     s+="<td align='right'>"+data['items'][i]['real_used']+"</td>";
-                    s+="<td align='center' width='70'>"+data['items'][i]['creation_date']+"</td>";
                     s+="<td><a href='personals/"+data['items'][i]['creation_by_id']+"'>"+data['items'][i]['creation_by']+"</a></td>";
+                    s+="<td align='center' width='70'>"+data['items'][i]['approval_date']+"</td>";
                     if (data['items'][i]['state']==0)
                         s+="<td align='center'><div class='icon-oknot'></div></td>";
                     else
@@ -328,7 +328,7 @@ if (isset($qs[1]))
                 <ul>
                     <li>&raquo;</li>
                     <li class="execute" id="btn_home">Home</li>
-                    <li class="dropdown">
+                    <li>Kreator
                         <select id="person" name="person">
                             <?php
                             $sql = "SELECT id, full_name FROM users ORDER BY full_name";
@@ -371,8 +371,8 @@ if (isset($qs[1]))
                     <th rowspan="2">Anggaran</th>
                     <th rowspan="2">Operasional</th>
                     <th rowspan="2">Realisasi</th>
-                    <th rowspan="2">Dibuat</th>
                     <th rowspan="2">Oleh</th>
+                    <th rowspan="2">Approved</th>
                     <th rowspan="2">Status</th>
                     <th rowspan="2">(%)</th>
                     <th colspan="3">Penerima</th>                    

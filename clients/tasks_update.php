@@ -37,14 +37,7 @@ if ($mode==ACT_EDIT){
                 FROM tasks
                 WHERE id=$id";
         $data_result = $db_obj->execSQL($sql);
-		if ($data_result)
-			$program = $data_result[0]['program'];
-		else
-		{
-			$data_result = NULL;
-			$id = 0;
-			$error_message = "Error. Mode edit namun gagal meload database";
-		}
+        $program = $data_result[0]['program'];
     }
     else
     {

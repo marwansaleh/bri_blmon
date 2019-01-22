@@ -12,7 +12,7 @@ array_shift($qs);
 
 //check security uri, must do in every page
 //to avoid http injection
-$max_parameter_alllowed = 5;
+$max_parameter_alllowed = 6;//5;
 security_uri_check($max_parameter_alllowed, $qs);
 
 $db_obj = new DatabaseConnection();

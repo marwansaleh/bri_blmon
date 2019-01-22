@@ -141,9 +141,9 @@ function check_login()
 }
 function isLoggedin()
 {
-    if (!isset($_SESSION['BRI_CSR']['USERS']['LOGGED_IN'])||$_SESSION['BRI_CSR']['USERS']['LOGGED_IN']!=true)
+    if (!isset($_SESSION['BRI_BL']['USERS']['LOGGED_IN'])||$_SESSION['BRI_BL']['USERS']['LOGGED_IN']!=true)
         return false;
-    else if ($_SESSION['BRI_CSR']['USERS']['LOGGED_IN']==true)
+    else if ($_SESSION['BRI_BL']['USERS']['LOGGED_IN']==true)
         return true;
 }
 function login($username, $password, DatabaseConnection $db_obj=NULL, &$message="")
@@ -183,20 +183,20 @@ function login($username, $password, DatabaseConnection $db_obj=NULL, &$message=
 function login_session_update($result_user_array, DatabaseConnection $db_obj=NULL)
 {
     //create new session for loggedin user
-    $_SESSION['BRI_CSR']['USERS']['LOGGED_IN'] = true;
-    $_SESSION['BRI_CSR']['USERS']['ID'] = $result_user_array['id'];
-    $_SESSION['BRI_CSR']['USERS']['ACCESS'] = $result_user_array['access'];
-    $_SESSION['BRI_CSR']['USERS']['TYPE'] = $result_user_array['type'];
-    $_SESSION['BRI_CSR']['USERS']['USERNAME'] = $result_user_array['user_name'];
-    $_SESSION['BRI_CSR']['USERS']['USERACCESS'] = $result_user_array['access'];
-    $_SESSION['BRI_CSR']['USERS']['FULLNAME'] = $result_user_array['full_name'];
-    $_SESSION['BRI_CSR']['USERS']['POSITION'] = $result_user_array['position'];
-    $_SESSION['BRI_CSR']['USERS']['AVATAR'] = $result_user_array['avatar'];
+    $_SESSION['BRI_BL']['USERS']['LOGGED_IN'] = true;
+    $_SESSION['BRI_BL']['USERS']['ID'] = $result_user_array['id'];
+    $_SESSION['BRI_BL']['USERS']['ACCESS'] = $result_user_array['access'];
+    $_SESSION['BRI_BL']['USERS']['TYPE'] = $result_user_array['type'];
+    $_SESSION['BRI_BL']['USERS']['USERNAME'] = $result_user_array['user_name'];
+    $_SESSION['BRI_BL']['USERS']['USERACCESS'] = $result_user_array['access'];
+    $_SESSION['BRI_BL']['USERS']['FULLNAME'] = $result_user_array['full_name'];
+    $_SESSION['BRI_BL']['USERS']['POSITION'] = $result_user_array['position'];
+    $_SESSION['BRI_BL']['USERS']['AVATAR'] = $result_user_array['avatar'];
     if($result_user_array['last_login']!==NULL)
-        $_SESSION['BRI_CSR']['USERS']['LASTLOGIN'] = $result_user_array['last_login'];
+        $_SESSION['BRI_BL']['USERS']['LASTLOGIN'] = $result_user_array['last_login'];
     else
-        $_SESSION['BRI_CSR']['USERS']['LASTLOGIN'] = $result_user_array['created_on'];
-    $_SESSION['BRI_CSR']['USERS']['IPADDRESS'] = get_ip();
+        $_SESSION['BRI_BL']['USERS']['LASTLOGIN'] = $result_user_array['created_on'];
+    $_SESSION['BRI_BL']['USERS']['IPADDRESS'] = get_ip();
     
     //update last login date to NOW and login_status to 1 (login)
     if (!$db_obj) $db_obj = new DatabaseConnection ();
@@ -210,7 +210,7 @@ function login_session_update($result_user_array, DatabaseConnection $db_obj=NUL
     
     //create tag to start activity
     //to maintain the validitiy ofuser session
-    $_SESSION['BRI_CSR']['USERS']['LAST_ACTIVITY'] = time();
+    $_SESSION['BRI_BL']['USERS']['LAST_ACTIVITY'] = time();
 }
 function logout($message="",DatabaseConnection $db_obj=NULL)
 {
@@ -230,7 +230,7 @@ function logout($message="",DatabaseConnection $db_obj=NULL)
     $db_obj->query($sql);
     
     //clean all session variable
-    $_SESSION['BRI_CSR'] = array();
+    $_SESSION['BRI_BL'] = array();
     session_destroy();
     //session_unset();
     return true;
@@ -257,8 +257,8 @@ function goto_filenotfound()
 }
 function get_user_info($info)
 {
-    if (isset($_SESSION['BRI_CSR']['USERS'][$info]))
-        return $_SESSION['BRI_CSR']['USERS'][$info];
+    if (isset($_SESSION['BRI_BL']['USERS'][$info]))
+        return $_SESSION['BRI_BL']['USERS'][$info];
     else
         return false;
 }
@@ -561,9 +561,9 @@ function update_user_session()
         $time_spare = 1200; //(20 minutes)
     }
     
-    if (isLoggedin()&&isset($_SESSION['BRI_CSR']['USERS']['LAST_ACTIVITY'])) 
+    if (isLoggedin()&&isset($_SESSION['BRI_BL']['USERS']['LAST_ACTIVITY'])) 
     {
-        if (time() - $_SESSION['BRI_CSR']['USERS']['LAST_ACTIVITY'] > $time_spare) 
+        if (time() - $_SESSION['BRI_BL']['USERS']['LAST_ACTIVITY'] > $time_spare) 
         {
             // last request was more than 30 minates ago
             if (logout("Logout from system because admin session has expired"))
@@ -572,7 +572,7 @@ function update_user_session()
                 exit;
             }
         }else{
-            $_SESSION['BRI_CSR']['USERS']['LAST_ACTIVITY'] = time(); // update last activity time stamp
+            $_SESSION['BRI_BL']['USERS']['LAST_ACTIVITY'] = time(); // update last activity time stamp
             $sql = "UPDATE users SET login_status=1, last_activity=NOW() WHERE (id=".get_user_info("ID").")";            
             $db_obj->query($sql);
         }
@@ -580,7 +580,7 @@ function update_user_session()
     
     
     //check other user only once
-    //if (!isset($_SESSION['BRI_CSR']['USERS']['CHECKALL']))
+    //if (!isset($_SESSION['BRI_BL']['USERS']['CHECKALL']))
     //{
         if (isLoggedin())
         {
@@ -594,20 +594,20 @@ function update_user_session()
         }
         $db_obj->query($sql);
         
-        $_SESSION['BRI_CSR']['USERS']['CHECKALL'] = true;
+        $_SESSION['BRI_BL']['USERS']['CHECKALL'] = true;
     //}
     
 }
 function get_sysvar_value($key)
 {
-    if (isset($_SESSION['BRI_CSR']['SYSVARS'][$key]))
-        return $_SESSION['BRI_CSR']['SYSVARS'][$key];
+    if (isset($_SESSION['BRI_BL']['SYSVARS'][$key]))
+        return $_SESSION['BRI_BL']['SYSVARS'][$key];
     else
         return false;
 }
 function load_sysvars(DatabaseConnection $db_obj=NULL)
 {
-    if (!isset($_SESSION['BRI_CSR']['SYSVARS']['LOADED']))
+    if (!isset($_SESSION['BRI_BL']['SYSVARS']['LOADED']))
     {
         if (!$db_obj) $db_obj = new DatabaseConnection ();
         $sql = "SELECT var, var_value FROM sysvars";
@@ -616,16 +616,16 @@ function load_sysvars(DatabaseConnection $db_obj=NULL)
         {
             foreach($result as $item)
             {
-                $_SESSION['BRI_CSR']['SYSVARS'][$item['var']]=$item['var_value'];
+                $_SESSION['BRI_BL']['SYSVARS'][$item['var']]=$item['var_value'];
             }
         }
-        $_SESSION['BRI_CSR']['SYSVARS']['LOADED']=true;
+        $_SESSION['BRI_BL']['SYSVARS']['LOADED']=true;
     }
 }
 //function to clear logs that old
 function clear_old_log(DatabaseConnection $db_obj=NULL)
 {
-    if (!isset($_SESSION['BRI_CSR']['LOG_CLEARED']))
+    if (!isset($_SESSION['BRI_BL']['LOG_CLEARED']))
     {
         if (!$db_obj) $db_obj = new DatabaseConnection ();
         
@@ -642,7 +642,7 @@ function clear_old_log(DatabaseConnection $db_obj=NULL)
             //delete old logs from databases;
             $sql = "DELETE FROM logs WHERE (DATE(log_date) < DATE_ADD(CURDATE(), INTERVAL -$age_old DAY))";
             $db_obj->query($sql);
-            $_SESSION['BRI_CSR']['LOG_CLEARED'] = true;
+            $_SESSION['BRI_BL']['LOG_CLEARED'] = true;
         }
     }
 }
@@ -688,7 +688,7 @@ function clean_garbage_session_files()
     $time_spare = 60*60*24; //(24 hours)
     $deleted_files = 0;
     $session_dir = sys_get_temp_dir() . '/';
-    if (!isset($_SESSION['BRI_CSR']['GARBAGE']))
+    if (!isset($_SESSION['BRI_BL']['GARBAGE']))
     {
         if ($handle = opendir($session_dir)) {
             while (false !== ($filename = readdir($handle))) {
@@ -701,7 +701,7 @@ function clean_garbage_session_files()
             }
 
         }
-        $_SESSION['BRI_CSR']['GARBAGE'] = true;
+        $_SESSION['BRI_BL']['GARBAGE'] = true;
     }
     return $deleted_files;
 }
@@ -709,7 +709,7 @@ function loadUserAccess(DatabaseConnection $db_obj=NULL)
 {
     if (!$db_obj) $db_obj = new DatabaseConnection();
     $tablename = "user_access";
-    $user_type = $_SESSION['BRI_CSR']['USERS']['TYPE'];
+    $user_type = $_SESSION['BRI_BL']['USERS']['TYPE'];
     if ($user_type=='admin'){
         $sql = "SELECT access
                 FROM $tablename 

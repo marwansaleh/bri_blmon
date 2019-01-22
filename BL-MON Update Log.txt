@@ -28,6 +28,13 @@ clients/reports_detail.php
 clients/report_detail_print.php
 ./cron_dbbackup.php
 
+22 Januari 2019
+clients/programs.php
+clients/program_update.php
+clients/areas.php
+clients/ajax.php
+clients/dbbackup.php
+
 
 
 UPDATE DATABASE
@@ -37,6 +44,8 @@ Penambahan Field nodin_putusan di tabel programs ekseksusi script berikut:
 ALTER TABLE `programs` ADD `nodin_putusan` VARCHAR(30) NULL AFTER `approval_by`, ADD INDEX `prgm_nodin_putusan_ndx` (`nodin_putusan`) ;
 ALTER TABLE `programs` ADD `nomor_persetujuan` VARCHAR(30) NULL AFTER `nodin_putusan`, ADD INDEX `prgm_nomor_persetujuan_ndx` (`nomor_persetujuan`) ;
 ALTER TABLE `programs` ADD `nomor_registrasi` VARCHAR(30) NULL AFTER `nomor_persetujuan`, ADD INDEX `prgm_nomor_registrasi_ndx` (`nomor_registrasi`) ;
+
+22 Januari 2019
 ALTER TABLE `programs` ADD `nomor_bg` VARCHAR(30) NULL AFTER `nomor_registrasi`, ADD INDEX `prgm_nomor_bg_ndx` (`nomor_bg`) ;
 ALTER TABLE `programs` ADD `tgl_putusan` DATE NULL AFTER `nomor_bg`;
 ALTER TABLE `programs` ADD `tgl_register` DATE NULL AFTER `tgl_putusan`;

@@ -68,9 +68,7 @@ $access = loadUserAccess($db_obj);
             var type = $('select#type').val();
             var area = $('select#area').val();
             
-            var url = "reports_detail_print/"+month_from+","+year_from+"#"+month_to+","+year_to+"#"+type+"#"+area;
-            //alert(url);return;
-            var wnd = window.open(url,"Print");
+            var wnd = window.open("reports_detail_print/"+month_from+","+year_from+"/"+month_to+","+year_to+"/"+type+"/"+area,"Print");
             wnd.focus();
         })
         $('li#btn_export').click(function(){            
@@ -125,8 +123,8 @@ $access = loadUserAccess($db_obj);
                     $('select#area').append(s);
                 }
             }
-            
-            loadReport();
+            //loadReport
+			loadReport();
         })
     }
     function loadReport()
@@ -140,11 +138,6 @@ $access = loadUserAccess($db_obj);
             $('h1.report-title').text('Laporan Detail Bina Lingkungan '+nama_bulan+' '+$('select#year_from').val()+' - PER WILAYAH');
         else
             $('h1.report-title').text('Laporan Detail Bina Lingkungan '+nama_bulan+' '+$('select#year_from').val()+' - PER PROPINSI');
-        
-        //empty table
-        $("table.data-list tr").each(function(){
-            $(this).remove();
-        });
         $.post("ajax",{input_function:'loadReportDetail',param:mode,
             month_from:$('select#month_from').val(),
             year_from:$('select#year_from').val(),
@@ -154,13 +147,16 @@ $access = loadUserAccess($db_obj);
             rand:Math.floor(Math.random()*100)},function(result){
             $('div#my-loader').hide();
             data = jQuery.parseJSON(result);
-            
+            //empty table
+            $("table.data-list tr").each(function(){
+                $(this).remove();
+            })
             if (data['found']['kanwil']>0){                
                 var s ="";
                 //write table header
                 var header = data['bidang'];
                 var header_total_count = (header.length*3)+10;
-                var col_num_count = (header.length*3)+2; //+2 for budget and operational+1 real
+                var col_num_count = (header.length*3)+2; //+2 for budget and operational
                 
                 s+="<tr>";
                 s+="<th rowspan='2'>No</th>";
@@ -169,13 +165,12 @@ $access = loadUserAccess($db_obj);
                 s+="<th rowspan='2'>Tanggal<br />Realisasi</th>";
                 s+="<th rowspan='2'>Deskripsi<br />Program</th>";
                 s+="<th rowspan='2'>Potensi<br />Bisnis</th>";
-				s+="<th colspan='2'>Penerima Manfaat</th>";
+		s+="<th colspan='2'>Penerima Manfaat</th>";
                 s+="<th rowspan='2'>Budget</th>";
-                s+="<th rowspan='2'>Real Budget</th>"
                 for (var i in header){
                     s+="<th colspan='3'>"+header[i]+"</th>";                    
                 }
-                //s+="<th rowspan='2'>Operasional</th>";
+                s+="<th rowspan='2'>Operasional</th>";
                 s+="</tr>";      
                 $("table.data-list").append(s);
                 s="<tr>";
@@ -204,16 +199,12 @@ $access = loadUserAccess($db_obj);
                     total_uker[z] = 0;
                     total_kanwil[z] = 0;
                 }
-                
-                var nomor_urut_kanwil = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
-                var nomor_urut_program = 1;
-                
                 for(var i in data['kanwil']['uker']){                                        
                     //first row for kanwil name
                     var uker_id = 0;
                     var uker_name = "";
                     s ="<tr>";
-                    s+="<td align='center' width='25'>"+nomor_urut_kanwil[i]+"</td>";
+                    s+="<td align='center' width='25'>"+(parseInt(i)+1)+"</td>";
                     s+="<td colspan='"+(header_total_count-1)+"'>"+data['kanwil']['uker'][i]['uker']+"</td>";
                     s+="</tr>";
                     $("table.data-list").append(s);
@@ -236,8 +227,7 @@ $access = loadUserAccess($db_obj);
                                 uker_name = data['kanwil']['items'][data['kanwil']['uker'][i]['id']][j]['uker']+" ("+data['kanwil']['items'][data['kanwil']['uker'][i]['id']][j]['jenis_uker']+")";
                             }
                             s="<tr>";
-                            s+="<td>&nbsp;</td>";
-                            s+="<td width='80' align='center'>"+(nomor_urut_program++)+"</td>";
+                            s+="<td>&nbsp;</td><td width='80'>&nbsp;</td>";
                             s+="<td width='70'>"+data['kanwil']['items'][data['kanwil']['uker'][i]['id']][j]['uker']+" ("+data['kanwil']['items'][data['kanwil']['uker'][i]['id']][j]['jenis_uker']+")"+"</td>";
                             s+="<td width='70' align='center'>"+data['kanwil']['items'][data['kanwil']['uker'][i]['id']][j]['approval_date']+"</td>";
                             s+="<td width='170'>"+data['kanwil']['items'][data['kanwil']['uker'][i]['id']][j]['description']+"</td>";                            
@@ -256,14 +246,8 @@ $access = loadUserAccess($db_obj);
                             total_kanwil[index] += budget;
                             grand_total[index] += budget;
                             index++;
-                            s+="<td align='right' width='60'>"+budget.formatMoney(0,',','.')+"</td>";
                             
-                            var real = data['kanwil']['items'][data['kanwil']['uker'][i]['id']][j]['real'] * 1;
-                            total_uker[index] += real;
-                            total_kanwil[index] += real;
-                            grand_total[index] += real;
-                            index++;
-                            s+="<td align='right' width='60'>"+real.formatMoney(0,',','.')+"</td>";
+                            s+="<td align='right' width='60'>"+budget.formatMoney(0,',','.')+"</td>";
                             
                             //tampilan per bidang
                             //var index = 1;
@@ -294,7 +278,7 @@ $access = loadUserAccess($db_obj);
                             total_uker[index] += operational;
                             total_kanwil[index] += operational;
                             grand_total[index] += operational;
-                            //s+="<td align='right' width='60'>"+operational.formatMoney(0,',','.')+"</td>";
+                            s+="<td align='right' width='60'>"+operational.formatMoney(0,',','.')+"</td>";
                             
                             s+="</tr>";
                             $("table.data-list").append(s);

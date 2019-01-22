@@ -7,7 +7,7 @@ require_once("./../funcs/constant.php");
 check_login();
 
 $qs = str_ireplace(FOLDER_PREFIX, "", $_SERVER["REQUEST_URI"]);
-$qs = explode("#", $qs);
+$qs = explode("/", $qs);
 array_shift($qs);
 
 //check security uri, must do in every page
@@ -103,7 +103,6 @@ else
                 }
             }
             
-            loadReport();
         })
     }
     function loadReport()
@@ -149,8 +148,8 @@ else
                 var s ="";
                 //write table header
                 var header = data['bidang'];
-                var header_total_count = (header.length*3)+11;
-                var col_num_count = (header.length*3)+3; //+2 for budget and operational
+                var header_total_count = (header.length*3)+10;
+                var col_num_count = (header.length*3)+2; //+2 for budget and operational
                 
                 var grand_total= new Array();
                 var total_per_uker = new Array();
@@ -170,10 +169,6 @@ else
                     total_per_page[z] = 0;
                     total_per_kanwil[z] = 0;
                 }   
-                
-                var nomor_urut_kanwil = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
-                var nomor_urut_program = 1;
-                
                 for(var i in data['kanwil']['uker']){
                     var cabang_id=0; kanwil_id = data['kanwil']['uker'][i]['id'];                                     
                     
@@ -184,7 +179,7 @@ else
                     } 
                     
                     //show kanwil name
-                    printKanwilName(nomor_urut_kanwil[i], header_total_count, data['kanwil']['uker'][i]['uker']);
+                    printKanwilName(parseInt(i)+1, header_total_count, data['kanwil']['uker'][i]['uker']);
                     rows++;                    
                     
                     if (rows%records_per_page==0){                        
@@ -223,8 +218,7 @@ else
                                 cabang_id = data['kanwil']['items'][data['kanwil']['uker'][i]['id']][j]['uker_id'];
                             }
                             s="<tr>";
-                            s+="<td>&nbsp;</td>";
-                            s+="<td width='80' align='center'>"+(nomor_urut_program++)+"</td>";
+                            s+="<td>&nbsp;</td><td width='80'>&nbsp;</td>";
                             s+="<td width='70'>"+data['kanwil']['items'][data['kanwil']['uker'][i]['id']][j]['uker']+" ("+data['kanwil']['items'][data['kanwil']['uker'][i]['id']][j]['jenis_uker']+")</td>";
                             s+="<td width='50' align='center' class='updatable' lang='programs,approval_date,"+program_id+",0'>"+data['kanwil']['items'][data['kanwil']['uker'][i]['id']][j]['approval_date']+"</td>";
                             s+="<td width='170' class='updatable' lang='programs,description,"+program_id+",0'>"+data['kanwil']['items'][data['kanwil']['uker'][i]['id']][j]['description']+"</td>";                            
@@ -246,14 +240,6 @@ else
                             total_per_kanwil[index] += budget;
                             index++;
                             s+="<td align='right' width='60' class='updatable' lang='programs,budget,"+program_id+",1'>"+budget.formatMoney(0,',','.')+"</td>";
-                            
-                            var real = data['kanwil']['items'][data['kanwil']['uker'][i]['id']][j]['real'] * 1;
-                            total_per_uker[index] += real;
-                            total_per_page[index] += real;
-                            total_per_kanwil[index] += real;
-                            grand_total[index] += real;
-                            index++;
-                            s+="<td align='right' width='60'>"+real.formatMoney(0,',','.')+"</td>";
                             
                             //tampilan per bidang
                             //var index = 1;
@@ -455,7 +441,6 @@ else
         s+="<th rowspan='2'>Potensi<br />Bisnis</th>";
         s+="<th colspan='2'>Penerima Manfaat</th>";
         s+="<th rowspan='2'>Budget</th>";
-        s+="<th rowspan='2'>Real Budget</th>"
         for (var n in header){
             s+="<th colspan='3'>"+header[n]+"</th>";                    
         }

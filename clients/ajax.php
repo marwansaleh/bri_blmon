@@ -113,10 +113,14 @@ function loadPrograms($page)
     }
     $type= $_POST['type'];
     $state = $_POST['state'];
+    $creation_year = isset($_POST['creation_year']) ? $_POST['creation_year'] : NULL;
     
     $num_of_recs = 7;
     //count all pages
     $sql = "SELECT COUNT(*) FROM programs p, uker u, kabupaten k, propinsi pr WHERE (p.uker=u.id)AND(k.id=u.kabupaten)AND(u.propinsi=pr.id)";
+    if ($creation_year){
+        $sql.=" AND (YEAR(p.creation_date)=$creation_year)";
+    }
     if(isset($search_string))
     {        
         $sql.=" AND((MATCH(p.name,p.description) AGAINST ('$search_string'))OR(p.name LIKE '%$search_string%')
@@ -153,6 +157,10 @@ function loadPrograms($page)
                 p.operational, p.creation_by as creation_by_id, u.propinsi as propinsi_id
                 FROM programs p, uker u, users us, propinsi pr, kabupaten k
                 WHERE (p.uker=u.id)AND(u.propinsi=pr.id)AND(u.kabupaten=k.id)AND(p.creation_by=us.id)";
+        
+        if ($creation_year){
+            $sql.=" AND (YEAR(p.creation_date)=$creation_year)";
+        }
         if (isset($search_string))
         {
             $sql.=" AND ((MATCH(p.name,p.description) AGAINST ('$search_string'))OR(p.name LIKE '%$search_string%')
@@ -2668,6 +2676,7 @@ function export_to_excel($filename)
 }
 function export_filtered_programs()
 {
+    set_time_limit(0);
     $db_obj = new DatabaseConnection();
     if (isset($_POST['search_str'])&&$_POST['search_str']!='')
     {
@@ -2677,6 +2686,7 @@ function export_filtered_programs()
     }
     $type= $_POST['type'];
     $state = $_POST['state'];
+    $year_creation = isset($_POST['creation_year']) ? $_POST['creation_year'] : NULL;
     
     $sql = "SELECT p.id, p.source,p.type,pt.type as type_name, p.name, p.description,p.potensi_bisnis, p.pic, p.uker_wilayah, p.uker_cabang,
             p.state, u.uker, pr.propinsi, k.kabupaten, p.benef_name,p.benef_address,p.benef_phone, p.benef_email, p.benef_orang, p.benef_unit, 
@@ -2685,6 +2695,9 @@ function export_filtered_programs()
             p.operational, p.creation_by as creation_by_id, u.propinsi as propinsi_id
             FROM programs p, uker u, users us, propinsi pr, kabupaten k, program_types pt
             WHERE (p.uker=u.id)AND(u.propinsi=pr.id)AND(u.kabupaten=k.id)AND(p.creation_by=us.id)AND(p.type=pt.id)";
+    if ($year_creation){
+        $sql.= " AND(YEAR(p.creation_date)=$year_creation)";
+    }
     if (isset($search_string))
     {
         $sql.=" AND ((MATCH(p.name,p.description) AGAINST ('$search_string'))OR(p.name LIKE '%$search_string%')
@@ -2748,6 +2761,7 @@ function export_filtered_programs()
             ->setCellValue($col++.$row, 'BESAR_ANGGARAN')
             ->setCellValue($col++.$row, 'DANA_OPERASIONAL')
             ->setCellValue($col++.$row, 'UNIT_KERJA')
+	    ->setCellValue($col++.$row, 'WILAYAH')
             ->setCellValue($col++.$row, 'KABUPATEN')
             ->setCellValue($col++.$row, 'PROVINSI')
             ->setCellValue($col++.$row, 'PENERIMA_MANFAAT')
@@ -2768,6 +2782,8 @@ function export_filtered_programs()
     
     // ISI DATA PROGRAM
     if (count($arr)) {
+	$kanwil_arr = get_kanwil_arr($db_obj);
+
         foreach ($arr as $item) {
             $col = 'A'; $row++;
             
@@ -2781,6 +2797,7 @@ function export_filtered_programs()
                     ->setCellValue($col++.$row, $item->budget)
                     ->setCellValue($col++.$row, $item->operational)
                     ->setCellValue($col++.$row, $item->uker)
+		    ->setCellValue($col++.$row, $kanwil_arr[$item->uker_wilayah])
                     ->setCellValue($col++.$row, $item->kabupaten)
                     ->setCellValue($col++.$row, $item->propinsi)
                     ->setCellValue($col++.$row, $item->benef_name)

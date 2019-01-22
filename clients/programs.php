@@ -12,7 +12,7 @@ array_shift($qs);
 
 //check security uri, must do in every page
 //to avoid http injection
-$max_parameter_alllowed = 4;//2;
+$max_parameter_alllowed = 2;
 security_uri_check($max_parameter_alllowed, $qs);
 
 $db_obj = new DatabaseConnection();
@@ -78,8 +78,9 @@ if (isset($qs[1]))
             var p_type = $('select#type').val();
             var p_search = $('input#keyword').val();
             var p_state = $('select#state').val();
+            var p_year = $('#creation_year').val();
             
-            $.post("ajax",{input_function:'export_filtered_programs',type:p_state,search_str:p_search,state:p_state}, function(result){
+            $.post("ajax",{input_function:'export_filtered_programs',type:p_state,search_str:p_search,state:p_state,creation_year:p_year}, function(result){
                 $('div#my-loader').hide();
                 var data = jQuery.parseJSON(result);
                 
@@ -120,9 +121,10 @@ if (isset($qs[1]))
         });
         
         var state = $('select#state').val();
+        var creation_year = $('#creation_year').val();
         
         $('div#my-loader').show();
-        $.post("ajax",{input_function:'loadPrograms',param:page,type:program_type,search_str:keyword,state:state},function(result){
+        $.post("ajax",{input_function:'loadPrograms',param:page,type:program_type,search_str:keyword,state:state, creation_year:creation_year},function(result){
             $('div#my-loader').hide();
             data = jQuery.parseJSON(result);
             
@@ -374,6 +376,7 @@ if (isset($qs[1]))
                             <option value="0">No</option>
                         </select>
                     </li>
+                    
                     <?php if (userHasAccess($access, "PROGRAM_CREATE")){?>
                     <li class="execute" id="btn_create">Tambah Program</li>
                     <?php }if (userHasAccess($access, "PROGRAM_EDIT")){?>
@@ -382,6 +385,9 @@ if (isset($qs[1]))
                     <li class="execute" id="btn_delete">Hapus Program</li>
                     <?php }?>
                     <li class="search">&laquo;</li>
+                    <li class="execute">
+                        <input type="text" id="creation_year" name="creation_year" placeholder="Tahun" style="width:40px;" />
+                    </li>
                     <li class="search">
                         <input type="text" id="keyword" name="keyword" 
                             	value="<?php echo (isset($keyword)?$keyword:'');?>" />

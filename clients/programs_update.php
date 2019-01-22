@@ -3,6 +3,7 @@ require_once("./../funcs/database.class.php");
 require_once("./../funcs/functions.php"); 
 require_once("./../funcs/tools.php");
 require_once("./../funcs/constant.php"); 
+require_once("./../funcs/db_config.php");
 
 check_login();
 
@@ -12,7 +13,7 @@ array_shift($qs);
 
 //check security uri, must do in every page
 //to avoid http injection
-$max_parameter_alllowed = 5;//3;
+$max_parameter_alllowed = 3;
 security_uri_check($max_parameter_alllowed, $qs);
 
 //Create database Object
@@ -33,7 +34,7 @@ if ($mode==ACT_EDIT){
         $id = $qs[2];
         $sql = "SELECT id, type, source, name, description, potensi_bisnis, pic, uker_cabang, uker_wilayah,
                 budget, operational, benef_name, benef_address, benef_phone, benef_email,
-                benef_orang, benef_unit, state, creation_date, approval_date, nodin_persetujuan
+                benef_orang, benef_unit, state, creation_date, approval_date, nodin_putusan
                 FROM programs
                 WHERE id=$id";
         $data_result = $db_obj->execSQL($sql);
@@ -46,6 +47,7 @@ if ($mode==ACT_EDIT){
 }else{
     $id=0;
 }
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -487,9 +489,9 @@ if ($mode==ACT_EDIT){
                                 <td><input type="text" id="approval_date" name="approval_date" value="<?php echo $approval_date;?>" <?php echo (!userHasAccess($access, "PROGRAM_APPROVE")?'disabled':''); ?> /></td>
                             </tr>  
                             <tr>
-                                <td class="title" width="250">Nodin Persetujuan</td>         
-                                <?php $nodin_persetujuan = (isset($data_result)?$data_result[0]['nodin_persetujuan']:'');?>
-                                <td><input type="text" id="nodin_persetujuan" name="nodin_persetujuan" value="<?php echo $nodin_persetujuan;?>" /></td>
+                                <td class="title" width="250">Nodin Putusan</td>         
+                                <?php $nodin_putusan = (isset($data_result)?$data_result[0]['nodin_putusan']:'');?>
+                                <td><input type="text" id="nodin_putusan" name="nodin_putusan" value="<?php echo $nodin_putusan;?>" /></td>
                             </tr>
                             <tr>
                                 <td class="title">Deskripsi Program</td>

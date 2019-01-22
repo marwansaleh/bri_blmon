@@ -2,11 +2,11 @@ DirectoryIndex index.php index.html
 
 #Turn on apache mod to enable Rewrite
 RewriteEngine On
-RewriteBase /projects/htdocs/bri_csr/
+#RewriteBase /
 #Redirect page not found
-ErrorDocument 404 /projects/htdocs/bri_csr/clients/filenotfound.php
+ErrorDocument 404 /clients/filenotfound.php
 #Prevent direct access to directory where we put core functions
-RewriteRule ^(inc) /projects/htdocs/bri_csr/clients/filenotfound.php [L]
+RewriteRule ^(inc) /clients/filenotfound.php [L]
 #Prevent extension php type in browser url
 RewriteCond ^%{THE_REQUEST} !ajax.php [NC]
 RewriteCond ^%{THE_REQUEST} \.php[\ /?].*HTTP/ [NC]

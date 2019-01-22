@@ -68,11 +68,8 @@ function get_rkap_year(DatabaseConnection $db_obj=NULL)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <?php echo page_header();?>
-<script type="text/javascript">     
+<script type="text/javascript"> 
     $(document).ready(function(){
-        var triwulan_label = ['0','I','II','III','IV'];
-        //set title
-        $('h1.report-title').html('LAPORAN RENCANA KERJA DAN ANGGARAN TRIWULAN '+triwulan_label[$('select#triwulan').val()]+'/'+$('select#tahun').val());
         //load rkap
         load_rkap($('select#tahun').val(),$('select#triwulan').val());
         $('h1.report-title').click(function(){
@@ -83,13 +80,9 @@ function get_rkap_year(DatabaseConnection $db_obj=NULL)
         })
         $('select#tahun').change(function(){
             load_rkap($(this).val(),$('select#triwulan').val());
-            //change title
-            $('h1.report-title').html('LAPORAN RENCANA KERJA DAN ANGGARAN TRIWULAN '+triwulan_label[$('select#triwulan').val()]+'/'+$(this).val());
         })
         $('select#triwulan').change(function(){
             load_rkap($('select#tahun').val(),$(this).val());
-            //change title
-            $('h1.report-title').html('LAPORAN RENCANA KERJA DAN ANGGARAN TRIWULAN '+triwulan_label[$(this).val()]+'/'+$('select#tahun').val());
         })
     })
     function load_rkap(year,triwulan)
@@ -98,12 +91,10 @@ function get_rkap_year(DatabaseConnection $db_obj=NULL)
         $('div#content-data').empty();
         $.post("ajax",{input_function:'loadRKAP_Report',param:year,triwulan:triwulan},function(result){
             $('div#my-loader').hide();
-            
+            create_table_header(triwulan);
             //extract data as JSON
             var data = jQuery.parseJSON(result);
             if (data['found']>0){
-                //create table data skeleton
-                create_table_header(triwulan);
                 var category_check = 0;
                 var category_num = 0;
                 var item_num = 0;
@@ -244,8 +235,8 @@ function get_rkap_year(DatabaseConnection $db_obj=NULL)
                     }
                 }
             }else{
-                s = "Data tidak ditemukan";
-                $('div#content-data').append(s);
+                s = "<tr class='row-msg'><td colspan='12'>Data tidak ditemukan</td></tr>";
+                $('table.print').append(s);
             }
         })
     }
@@ -308,7 +299,7 @@ function get_rkap_year(DatabaseConnection $db_obj=NULL)
         border-bottom: solid 1px #000000;
     }
     table.print td {
-        padding: 5px 2px 5px 2px;
+        padding: 2px;
         border-left: solid 1px #000000;
         border-bottom: solid 1px #000000;
 		font-size:9px;
@@ -332,7 +323,7 @@ function get_rkap_year(DatabaseConnection $db_obj=NULL)
 </head>
 
 <body>
-    <h1 class="report-title">LAPORAN RENCANA KERJA DAN ANGGARAN TRIWULAN</h1>
+    <h1 class="report-title">LAPORAN RENCANA KERJA DAN ANGGARAN TRIWULAN <?php echo $triwulan." ".$tahun;?> </h1>
     <p class="no-print">
         <button id="btn_print" onclick="window.print();">Print</button>
         <button id="btn_close" onclick="window.close();">Close</button>

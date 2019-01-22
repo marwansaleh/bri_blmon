@@ -129,12 +129,8 @@ $access = loadUserAccess($db_obj);
             form_window.appendTo('div#initial-form');
             $('div#form-window').show();
         }
-        
         //set input hidden parent
         $('input#param').val(parent);
-        
-        //set focus
-        $('textarea#news_text').focus();
     }
     function createNavigator(page_active, num_of_pages, keyword)
     {
@@ -192,7 +188,7 @@ $access = loadUserAccess($db_obj);
             else
                 $('ul.news-main').prepend(s);
                     
-            //$('ul.news-main').listView.refresh();
+            $('ul.news-main').listView.refresh();
             
             $('ul.news-main li').hover(
                 function(){

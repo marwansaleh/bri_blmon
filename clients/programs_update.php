@@ -482,52 +482,49 @@ if ($mode==ACT_EDIT){
                             <tr>
                                 <td class="title" width="250">Tanggal Pembuatan <em>(YYYY-mm-dd)</em></td>         
                                 <?php $creation_date = (isset($data_result)?$data_result[0]['creation_date']:date("Y-m-d H:i:s"));?>
-                                <td><input type="text" id="creation_date" name="creation_date" value="<?php echo $creation_date;?>" /></td>
+                                <td colspan="3"><input type="text" id="creation_date" name="creation_date" value="<?php echo $creation_date;?>" /></td>
                             </tr>
                             <tr>
                                 <td class="title" width="250">Nodin Putusan</td>         
                                 <?php $nodin_putusan = (isset($data_result)?$data_result[0]['nodin_putusan']:'');?>
                                 <td><input type="text" id="nodin_putusan" name="nodin_putusan" value="<?php echo $nodin_putusan;?>" /></td>
-                            </tr>
-                            <tr>
-                                <td class="title" width="250">Tanggal Putusan <em>(YYYY-mm-dd)</em></td>         
+                                
+                                <td class="title" width="250" align="right">Tanggal Putusan <em>(YYYY-mm-dd)</em></td>         
                                 <?php $tgl_putusan = (isset($data_result)&&$state?$data_result[0]['tgl_putusan']:'');?>
                                 <td><input type="text" id="tgl_putusan" name="tgl_putusan" value="<?php echo $tgl_putusan;?>" /></td>
-                            </tr> 
+                            </tr>
                             <tr>
                                 <td class="title" width="250">Nomor Persetujuan</td>         
                                 <?php $nomor_persetujuan = (isset($data_result)?$data_result[0]['nomor_persetujuan']:'');?>
                                 <td><input type="text" id="nomor_persetujuan" name="nomor_persetujuan" value="<?php echo $nomor_persetujuan;?>" /></td>
-                            </tr>
-                            <tr>
-                                <td class="title" width="250">Tanggal Persetujuan <em>(YYYY-mm-dd)</em></td>         
+                                
+                                <td class="title" width="250" align="right">Tanggal Persetujuan <em>(YYYY-mm-dd)</em></td>         
                                 <?php $approval_date = (isset($data_result)&&$state?$data_result[0]['approval_date']:'');?>
                                 <td><input type="text" id="approval_date" name="approval_date" value="<?php echo $approval_date;?>" <?php echo (!userHasAccess($access, "PROGRAM_APPROVE")?'disabled':''); ?> /></td>
-                            </tr> 
+                            </tr>
                             <tr>
                                 <td class="title" width="250">Nomor Register</td>         
                                 <?php $nomor_registrasi = (isset($data_result)?$data_result[0]['nomor_registrasi']:'');?>
                                 <td><input type="text" id="nomor_registrasi" name="nomor_registrasi" value="<?php echo $nomor_registrasi;?>" /></td>
-                            </tr>
-                            <tr>
-                                <td class="title" width="250">Tanggal Register <em>(YYYY-mm-dd)</em></td>         
+                                
+                                <td class="title" width="250" align="right">Tanggal Register <em>(YYYY-mm-dd)</em></td>         
                                 <?php $tgl_register = (isset($data_result)&&$state?$data_result[0]['tgl_register']:'');?>
                                 <td><input type="text" id="tgl_register" name="tgl_register" value="<?php echo $tgl_register;?>"  /></td>
-                            </tr> 
+                            </tr>
                             <tr>
                                 <td class="title" width="250">Nomor BG</td>         
                                 <?php $nomor_bg = (isset($data_result)?$data_result[0]['nomor_bg']:'');?>
-                                <td><input type="text" id="nomor_bg" name="nomor_bg" value="<?php echo $nomor_bg;?>" /></td>
+                                <td colspan="3"><input type="text" id="nomor_bg" name="nomor_bg" value="<?php echo $nomor_bg;?>" /></td>
                             </tr>
                             <tr>
                                 <td class="title">Deskripsi Program</td>
                                 <?php $description = (isset($data_result)?$data_result[0]['description']:'');?>
-                                <td><textarea id="description" name="description" rows="8"><?php echo $description;?></textarea></td>
+                                <td colspan="3"><textarea id="description" name="description" rows="8"><?php echo $description;?></textarea></td>
                             </tr>
                             <tr>
                                 <td class="title">Potensi Bisnis</td>
                                 <?php $potensi_bisnis = (isset($data_result)?$data_result[0]['potensi_bisnis']:'');?>
-                                <td><textarea id="potensi_bisnis" name="potensi_bisnis" rows="8"><?php echo $potensi_bisnis;?></textarea></td>
+                                <td colspan="3"><textarea id="potensi_bisnis" name="potensi_bisnis" rows="8"><?php echo $potensi_bisnis;?></textarea></td>
                             </tr>
                         </table>
                     </div>

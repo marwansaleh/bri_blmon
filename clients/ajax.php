@@ -1364,13 +1364,17 @@ function loadProgramsByWilayah($page)
         $sql = "SELECT COUNT(*) FROM programs p, uker u, kabupaten k, propinsi pr WHERE (p.uker=u.id)AND(u.propinsi=pr.id)AND(u.kabupaten=k.id)";
     if (isset($search_string))
     {
-        $sql.=" AND((MATCH(name,description) AGAINST ('$search_string'))OR(name LIKE '%$search_string%')
+        $sql.=" AND((MATCH(name,description) AGAINST ('$search_string'))
+                OR(name LIKE '%$search_string%')
                 OR(u.uker LIKE '%$search_string%')
                 OR(k.kabupaten LIKE '%$search_string%')
                 OR(k.ibukota LIKE '%$search_string%')
                 OR(pr.propinsi LIKE '%$search_string%')
                 OR(pr.ibukota LIKE '%$search_string%')
-                OR(p.benef_name LIKE '%$search_string%')";
+                OR(p.benef_name LIKE '%$search_string%')
+                OR(p.nodin_putusan LIKE '%$search_string%')
+		OR(p.nomor_registrasi LIKE '%$search_string%')
+		OR(p.nomor_persetujuan LIKE '%$search_string%')";
         if ($kanwil_id_like)
             $sql.= "OR(p.uker_wilayah IN (". implode(",",$kanwil_id_like)."))";
         

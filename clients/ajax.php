@@ -2770,13 +2770,16 @@ function export_filtered_programs()
     $Excel = new PHPExcel();
     $Excel->getProperties()->setCreator('PT. Bank Rakyat Indonesia, Tbk.')
             ->setLastModifiedBy('Div. Corporate Secretary')
-            ->setTitle('Data Program Bantuan Sosial PT. Bank Rakyat Indonesia');
+            ->setTitle('Data Program Bina Lingkungan PT. Bank Rakyat Indonesia');
     
     //create header
     $Excel->setActiveSheetIndex(0);
     $Excel->getActiveSheet()->setShowGridlines(TRUE);
 
-    $row = 1;
+    //Set Title
+    $Excel->getActiveSheet()->setCellValue('A1', 'DAFTAR PROGRAM BINA LINGKUNGAN PT. BANK RAKYAT INDONESIA, TBK.');
+    
+    $row = 3;
     $col = 'A';
     
     // Buat Nama Kolom

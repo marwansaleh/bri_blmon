@@ -679,7 +679,7 @@ function save_deleted_logs($age_old, DatabaseConnection $db_obj=NULL)
         if (file_put_contents($folder."/".$filename, $s))
             return true;
         else{
-            exit('Gagal menyimpan file logs yang akan dihapus');
+            //exit('Gagal menyimpan file logs yang akan dihapus');
             return false;            
         }
     }else{

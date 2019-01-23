@@ -657,11 +657,14 @@ function save_deleted_logs($age_old, DatabaseConnection $db_obj=NULL)
     $result = $db_obj->execSQL($sql);
     if ($result)
     {
-        $folder = "../old_logs";
+        $folder = APP_BASE_PATH."old_logs";
         $filename = time()."-"."deleted-logs";
         //check if folder exists, if not, create one
-        if (!file_exists($folder))
-            mkdir($folder, 0775);
+        if (!file_exists($folder)) {
+            if (!mkdir($folder, 0775)){
+                return FALSE;
+            }
+        }
         
         $s="";
         foreach ($result as $item)

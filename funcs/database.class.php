@@ -76,19 +76,24 @@ class DatabaseConnection
 			}
 		}
 	}
-        function fetch_obj($sql){
+        function fetch_obj($sql, $single=FALSE){
             $result = mysql_query($sql, $this->connection);
             if ($result)
             {
                     $this->numrecord = mysql_affected_rows($this->connection);
                     $this->last_id = mysql_insert_id($this->connection);
-                    $res_array = array();
-                    while ($r = mysql_fetch_object($result)){
-                            $res_array [] = $r;
+                    if (!$single) {
+                        $res = array();
+                        while ($r = mysql_fetch_object($result)){
+                            $res [] = $r;
+                        }
+                    } else {
+                        $res = mysql_fetch_object($result);
                     }
+                    
                     mysql_free_result($result);
 
-                    return $res_array;
+                    return $res;
             } else {
                     $this->error_message = mysql_error($this->connection);
                     return false;

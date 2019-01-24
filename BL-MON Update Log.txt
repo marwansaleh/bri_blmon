@@ -57,3 +57,6 @@ Files:
 custom/js/jquery-ui-1.11.4/
 funcs/functions.php
 clients/programs_update.php
+clients/programs.php
+clients/ajax.php
+funcs/database.class.php

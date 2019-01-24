@@ -29,8 +29,35 @@ if (isset($qs[1]))
 <?php echo page_header();?>
 <script type="text/javascript"> 
     var access_manipulate_other = "<?php echo (userHasAccess($access, "PROGRAM_MANIPULATE_OTHER")?1:0);?>";
+    var curPage = 0;
     $(document).ready(function(){
-        loadPrograms(0,$('select#type').val(),'');
+        // Initialize datepicker
+        $( ".datepicker" ).datepicker({
+            dateFormat: "yy-mm-dd"
+        });
+        
+        // Initialize dialog
+        $( "#dlg-approval" ).dialog({
+            autoOpen: false,
+            modal: true,
+            minWidth: 350,
+            buttons: [
+                {
+                    text: "Approve",
+                    click: function() {
+                        executeApproval();
+                    }
+                },
+                {
+                    text: "Cancel",
+                    click: function() {
+                        $( this ).dialog( "close" );
+                    }
+                }
+            ]
+          });
+
+        loadPrograms(curPage,$('select#type').val(),'');
         
         $('li#btn_home').click(function(){
             window.location = "./";
@@ -112,9 +139,10 @@ if (isset($qs[1]))
                 $('div#btn_search_content').click();
             }			
 	});        
-    })
+    });
     function loadPrograms(page,program_type,keyword)
     {        
+        curPage = page;
         //empty table
         $("table.data-list tr.row-msg").each(function(){
             $(this).remove();
@@ -235,32 +263,14 @@ if (isset($qs[1]))
                 var td_ref = $('tr#'+program_id).find('td').eq(10);
                 
                 if (caption=='Approve'){
-                    new_caption = 'Not-Approve';
-                    new_status = 1;
-                }else{
-                    new_caption = "Approve";
-                    new_status = 0;
-                }
-                var approval_date = (new_status==1?prompt("Masukkan tanggal approval dengan format YYYY-mm-dd. Kosongkan untuk tanggal hari ini",""):'');
-                $('div#my-loader').show();
-                $.post("ajax",{input_function:'updateProgramStatus',param:program_id,status:new_status,approval_date:approval_date},function(result){
-                    $('div#my-loader').hide();
-                    if (parseInt(result)==1){
-                        btn_ref.text(new_caption);
-                        if(new_status==0){                            
-                            td_ref.html("<div class='icon-oknot'></div>");
-                            btn_ref.parent().find('#drp_real').remove();
-                            btn_ref.parent().find('#drp_task').remove();
-                        }else{
-                            td_ref.html("<div class='icon-ok'></div>");
-                            btn_ref.parent().append("<li id='drp_real' onclick='programReal("+program_id+");'>Realisasi</li>");
-                            btn_ref.parent().append("<li id='drp_task' onclick='programTask("+program_id+");'>Task list</li>");
-                        }
-                    }else{
-                        alert(result.substr(1));
-                    }     
+                    //Update dialog
+                    $('#dlg-approval').find('#dlg-program-id').val(program_id);
+                    $('#dlg-approval').find('#dlg-tgl-persetujuan').val($('#dlg-today').val());
+                    $( "#dlg-approval" ).dialog("open");
                     
-                })
+                }else{
+                    cancelApprovalStatus(program_id);
+                }
                 
             })
             <?php }?>
@@ -272,11 +282,55 @@ if (isset($qs[1]))
                 }
             })
         })
-    }
+    };
+    function cancelApprovalStatus(program_id){
+        //Update server
+        $('div#my-loader').show();
+        $.post("ajax",{input_function:'cancelProgramStatus',param:program_id},function(result){
+            $('div#my-loader').hide();
+            var result = jQuery.parseJSON(result);
+            
+            if (result.status){
+                loadPrograms(curPage, $('select#type').val(), $('input#keyword').val());
+            }else{
+                alert(result.message);
+            }   
+
+        });
+    };
+    function executeApproval() {
+        var program_id = $('#dlg-program-id').val();
+        var nama_realisasi = $('#dlg-nama-realisasi').val();
+        var nominal_realisasi = $('#dlg-nominal-realisasi').val();
+        var tgl_persetujuan = $('#dlg-tgl-persetujuan').val();
+        
+        //Close dialog
+        $( "#dlg-approval" ).dialog("close");
+        
+        //Update server
+        $('div#my-loader').show();
+        $.post("ajax",{
+            input_function:'approveProgramStatus',
+            param:program_id,
+            approval_date:tgl_persetujuan,
+            nama_realisasi: nama_realisasi,
+            nominal_realisasi: nominal_realisasi
+        },function(result){
+            $('div#my-loader').hide();
+            var result = jQuery.parseJSON(result);
+            
+            if (result.status){
+                loadPrograms(curPage, $('select#type').val(), $('input#keyword').val());
+            }else{
+                alert(result.message);
+            }     
+
+        });
+    };
     function programTask(program_id)
     {
         window.location="tasks/"+program_id;
-    }
+    };
     function programReal(program_id)
     {
         window.location="realisation/"+program_id;
@@ -429,6 +483,28 @@ if (isset($qs[1]))
         <div class="content">
             <ul class="navigation"></ul>
         </div>
+    </div>
+    
+    <!-- Modal dialog -->
+    <div id="dlg-approval" title="Program Approval">
+        <input type="hidden" id="dlg-program-id" value="0" />
+        <input type="hidden" id="dlg-today" value="<?php echo date('Y-m-d'); ?>" />
+        <table border="0">
+            <tbody>
+                <tr>
+                    <td>Nama realisasi</td>
+                    <td align="right"><input type="text" id="dlg-nama-realisasi" style="width: 200px;" /></td>
+                </tr>
+                <tr>
+                    <td>Nominal realisasi</td>
+                    <td align="right"><input type="text" id="dlg-nominal-realisasi" style="width: 200px;" /></td>
+                </tr>
+                <tr>
+                    <td>Tgl. Persetujuan</td>
+                    <td align="right"><input type="text" class="datepicker" id="dlg-tgl-persetujuan" style="width: 200px;" /></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <?php echo document_footer();?>
 </body>

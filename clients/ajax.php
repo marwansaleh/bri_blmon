@@ -24,6 +24,8 @@ switch($function)
     case 'savePrograms': savePrograms($param); break;
     case 'deleteDocRef': deleteDocRef($param); break;
     case 'updateProgramStatus': updateProgramStatus($param); break;
+    case 'approveProgramStatus': approveProgramStatus($param); break;
+    case 'cancelProgramStatus': cancelProgramStatus($param); break;
     case 'loadTasks': loadTasks($param); break;
     case 'saveTasks': saveTasks($param); break;
     case 'loadUker': loadUker($param); break;
@@ -468,6 +470,125 @@ function updateProgramStatus($program_id)
     }
     else
         echo ("0".$db_obj->getLastError ());
+}
+function approveProgramStatus($program_id)
+{
+    $result = ['status'=>FALSE];
+    
+    $db_obj = new DatabaseConnection();
+    $status = 1; //approval
+    $approval_date = $_POST['approval_date'] ? $_POST['approval_date']:date("Y-m-d H:i:s");
+    $nama_realisasi = trim($_POST['nama_realisasi']);
+    $nominal_realisasi = $_POST['nominal_realisasi'];
+    
+    $program = load_program($program_id, $db_obj);
+    if ($program)
+    {
+        $program_caption = $program['name'];
+        $program_budget = $program['budget'];
+    }else{
+        $program_caption = 'Unknown';
+        $program_budget = 0;
+    }
+    
+    $sql = "UPDATE programs SET 
+            state=$status,approval_date='$approval_date',approval_by=".get_user_info('ID')."
+            WHERE id=$program_id";
+    
+    if ($db_obj->query($sql))
+    {
+        //update saldo
+        $trans_desc = "Approval";
+        $trans_type = "trans_debet";
+        
+        $sql = "INSERT INTO saldo(trans_desc,".$trans_type.",trans_by)VALUES
+                ('$trans_desc program $program_caption',$program_budget,".get_user_info('ID').")";
+        $db_obj->query($sql);
+        
+        //create log
+        logs(get_user_info("USERNAME"), "Update status approval program [program:$program_caption][status:$status]", $db_obj);
+        
+        //Update realisasi
+        $sql = "INSERT INTO budget_real_used 
+                (program, caption, nominal, creation_date,creation_by,last_update_by)VALUES
+                ($program_id,'$nama_realisasi',$nominal_realisasi,NOW(),".get_user_info("ID").",".get_user_info("ID").")";
+        
+        if ($db_obj->query($sql))
+        {        
+            //create log
+            logs(get_user_info("USERNAME"), "Update realisasi anggaran[nama:$nama_realisasi][nilai:$nominal_realisasi]", $db_obj);
+            //update saldo realisasi
+            $sql = "INSERT INTO saldo_real (trans_desc, trans_debet,trans_credit,trans_by)VALUES
+                    ('Update realisasi',$nominal_realisasi,0,".get_user_info("ID").")";
+            $db_obj->query($sql);
+
+            $result['status'] = TRUE;
+        }else{
+            $result['message'] = $db_obj->getLastError();
+        }
+    } else {
+        $result['message'] = $db_obj->getLastError ();
+    }
+    echo json_encode($result);
+}
+function cancelProgramStatus($program_id)
+{
+    $result = ['status'=>FALSE];
+    $db_obj = new DatabaseConnection();
+    
+    $program = load_program($program_id, $db_obj);
+    if ($program)
+    {
+        $program_caption = $program['name'];
+        $program_budget = $program['budget'];
+    }else{
+        $program_caption = 'Unknown';
+        $program_budget = 0;
+    }
+    
+    $sql = "UPDATE programs SET 
+            state=0,approval_date=NULL,approval_by=0
+            WHERE id=$program_id";
+    
+    if ($db_obj->query($sql))
+    {
+        //update saldo
+        $trans_desc = "Membatalkan approval";
+        $trans_type = "trans_credit";
+        
+        $sql = "INSERT INTO saldo(trans_desc,".$trans_type.",trans_by)VALUES
+                ('$trans_desc program $program_caption',$program_budget,".get_user_info('ID').")";
+        $db_obj->query($sql);
+        
+        //create log
+        logs(get_user_info("USERNAME"), "Update status approval program [program:$program_caption][status:0]", $db_obj);
+        
+        //Ambil nilai realisasi
+        $sql = "SELECT SUM(nominal) AS nominal_sum FROM budget_real_used "
+                . "WHERE program=$program_id";
+        $budget_real = $db_obj->fetch_obj($sql, TRUE);
+        
+        
+        $sql = "DELETE FROM budget_real_used WHERE program=$program_id";
+        
+        if ($budget_real && $db_obj->query($sql))
+        {        
+            //create log
+            logs(get_user_info("USERNAME"), "Hapus realisasi anggaran[nilai:".$budget_real->nominal_sum."]", $db_obj);
+            //update saldo realisasi
+            $sql = "INSERT INTO saldo_real (trans_desc, trans_debet,trans_credit,trans_by)VALUES
+                    ('Hapus realisasi',0,".$budget_real->nominal_sum.",".get_user_info("ID").")";
+            $db_obj->query($sql);
+
+            $result['status'] = TRUE;
+        }else{
+            $result['message'] = $db_obj->getLastError();
+        }
+    }
+    else {
+        $result['message'] = $db_obj->getLastError ();
+    }
+    echo json_encode($result);
 }
 function loadTasks($program_id)
 {

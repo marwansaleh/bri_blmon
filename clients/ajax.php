@@ -321,7 +321,7 @@ function savePrograms($mode)
     {
         $sql = "INSERT INTO programs 
                 (name, source, description, potensi_bisnis, type, budget,operational,benef_name,benef_address,benef_phone,benef_email,benef_orang,benef_unit,pic,uker, uker_wilayah,uker_cabang,creation_date,creation_by,last_update_by,approval_by,nodin_putusan,nomor_persetujuan,nomor_registrasi,tgl_putusan,tgl_register,nomor_bg)VALUES
-                ('$name',$source,'$description','$potensi_bisnis',$type,$budget,$operational,'$benef_name','$benef_address','$benef_phone','$benef_email',$benef_orang,$benef_unit,'$pic',$uker, $uker_wilayah,$uker_cabang,'$creation_date',".get_user_info("ID").",".get_user_info("ID").",".get_user_info("ID").",'$nodin_putusan','$nomor_persetujuan','$nomor_registrasi','$tgl_putusan,'$tgl_register','$nomor_bg')";
+                ('$name',$source,'$description','$potensi_bisnis',$type,$budget,$operational,'$benef_name','$benef_address','$benef_phone','$benef_email',$benef_orang,$benef_unit,'$pic',$uker, $uker_wilayah,$uker_cabang,'$creation_date',".get_user_info("ID").",".get_user_info("ID").",".get_user_info("ID").",'$nodin_putusan','$nomor_persetujuan','$nomor_registrasi','$tgl_putusan','$tgl_register','$nomor_bg')";
     }else{
         //check if already approve (state=1) and budget change
         //modified saldo also

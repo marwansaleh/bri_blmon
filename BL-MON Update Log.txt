@@ -55,6 +55,9 @@ ALTER TABLE `programs` ADD `tgl_register` DATE NULL AFTER `tgl_putusan`;
 
 Files:
 custom/js/jquery-ui-1.11.4/
+custom/js/jquery-mask/
+custom/js/jquery-1.12.4.min.js
+
 funcs/functions.php
 clients/programs_update.php
 clients/programs.php

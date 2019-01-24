@@ -18,8 +18,10 @@ function page_header($page_title="")
     $s.="<link rel=\"shortcut icon\" href=\"favicon.gif\" />";
     $s.="<title>".$page_title."</title>";
     $s.= get_user_style_files();
-    $s.="<script language=\"javascript\" type=\"text/javascript\" src=\"customs/js/jquery-1.6.4.min.js\"></script>";
+    $s.="<script language=\"javascript\" type=\"text/javascript\" src=\"customs/js/jquery-1.12.4.min.js\"></script>";
+    $s.="<script language=\"javascript\" type=\"text/javascript\" src=\"customs/js/jquery-mask/jquery.mask.min.js\"></script>";
     $s.="<script language=\"javascript\" type=\"text/javascript\" src=\"customs/js/jquery-ui-1.11.4/jquery-ui.min.js\"></script>";
+    
     $s.="<script language=\"javascript\" type=\"text/javascript\" src=\"customs/js/main.js\"></script>";
     
     return $s;

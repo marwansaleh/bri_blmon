@@ -59,6 +59,10 @@ if ($mode==ACT_EDIT){
 <script type="text/javascript">
     var tabs, pic_timer, benef_timer;    
     $(document).ready(function(){
+        $( ".datepicker" ).datepicker({
+            dateFormat: "yy-mm-dd"
+        });
+        
         tabs = new Tabs({"tabs_01":"Program","tabs_02":"Unit Kerja","tabs_03":"Penerima Manfaat","tabs_04":"Tambahan","tabs_05":"Dokumentasi"}, "tabs-parent");
         tabs.activePage = 0;
         tabs.init();
@@ -481,8 +485,8 @@ if ($mode==ACT_EDIT){
                         <table class="data-input">
                             <tr>
                                 <td class="title" width="250">Tanggal Pembuatan <em>(YYYY-mm-dd)</em></td>         
-                                <?php $creation_date = (isset($data_result)?$data_result[0]['creation_date']:date("Y-m-d H:i:s"));?>
-                                <td colspan="3"><input type="text" id="creation_date" name="creation_date" value="<?php echo $creation_date;?>" /></td>
+                                <?php $creation_date = (isset($data_result)?$data_result[0]['creation_date']:date("Y-m-d"));?>
+                                <td colspan="3"><input type="text" class="datepicker" id="creation_date" name="creation_date" value="<?php echo $creation_date;?>" /></td>
                             </tr>
                             <tr>
                                 <td class="title" width="250">Nodin Putusan</td>         
@@ -491,7 +495,7 @@ if ($mode==ACT_EDIT){
                                 
                                 <td class="title" width="250" align="right">Tanggal Putusan <em>(YYYY-mm-dd)</em></td>         
                                 <?php $tgl_putusan = (isset($data_result)&&$state?$data_result[0]['tgl_putusan']:'');?>
-                                <td><input type="text" id="tgl_putusan" name="tgl_putusan" value="<?php echo $tgl_putusan;?>" /></td>
+                                <td><input type="text" class="datepicker" id="tgl_putusan" name="tgl_putusan" value="<?php echo $tgl_putusan;?>" /></td>
                             </tr>
                             <tr>
                                 <td class="title" width="250">Nomor Persetujuan</td>         
@@ -500,7 +504,7 @@ if ($mode==ACT_EDIT){
                                 
                                 <td class="title" width="250" align="right">Tanggal Persetujuan <em>(YYYY-mm-dd)</em></td>         
                                 <?php $approval_date = (isset($data_result)&&$state?$data_result[0]['approval_date']:'');?>
-                                <td><input type="text" id="approval_date" name="approval_date" value="<?php echo $approval_date;?>" <?php echo (!userHasAccess($access, "PROGRAM_APPROVE")?'disabled':''); ?> /></td>
+                                <td><input type="text" class="datepicker" id="approval_date" name="approval_date" value="<?php echo $approval_date;?>" <?php echo (!userHasAccess($access, "PROGRAM_APPROVE")?'disabled':''); ?> /></td>
                             </tr>
                             <tr>
                                 <td class="title" width="250">Nomor Register</td>         
@@ -509,7 +513,7 @@ if ($mode==ACT_EDIT){
                                 
                                 <td class="title" width="250" align="right">Tanggal Register <em>(YYYY-mm-dd)</em></td>         
                                 <?php $tgl_register = (isset($data_result)&&$state?$data_result[0]['tgl_register']:'');?>
-                                <td><input type="text" id="tgl_register" name="tgl_register" value="<?php echo $tgl_register;?>"  /></td>
+                                <td><input type="text" class="datepicker" id="tgl_register" name="tgl_register" value="<?php echo $tgl_register;?>"  /></td>
                             </tr>
                             <tr>
                                 <td class="title" width="250">Nomor BG</td>         

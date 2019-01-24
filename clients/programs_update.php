@@ -62,6 +62,8 @@ if ($mode==ACT_EDIT){
         $( ".datepicker" ).datepicker({
             dateFormat: "yy-mm-dd"
         });
+        // masking
+        $('#nomor_registrasi').mask("0999.09.099");
         
         tabs = new Tabs({"tabs_01":"Program","tabs_02":"Unit Kerja","tabs_03":"Penerima Manfaat","tabs_04":"Tambahan","tabs_05":"Dokumentasi"}, "tabs-parent");
         tabs.activePage = 0;
@@ -94,10 +96,9 @@ if ($mode==ACT_EDIT){
         })
         $('select#kanwil').change(function(){
             var wilayah = $(this).val();
-			var type = $('option:selected', this).attr('type');
-			if (type == 'KP') wilayah = 0;
+            var type = $('option:selected', this).attr('type');
+            if (type == 'KP') wilayah = 0;
 			
-			alert(type);
             loadKancab(wilayah);
         })
         $('input[type="file"]').change ( function ()

@@ -430,6 +430,7 @@ if ($mode==ACT_EDIT){
                                         echo ">---".$wilayah_label." (KW)---</option>";
                                         
                                         $kancab_options = load_kancab_by_parent($wilayah, $db_obj);
+										
                                         foreach($kancab_options as $item){
                                             echo "<option value='".$item['id']."'";
                                             if ($cabang>0&&$cabang==$item['id'])
@@ -495,7 +496,7 @@ if ($mode==ACT_EDIT){
                                 <td><input type="text" id="nodin_putusan" name="nodin_putusan" value="<?php echo $nodin_putusan;?>" /></td>
                                 
                                 <td class="title" width="250" align="right">Tanggal Putusan <em>(YYYY-mm-dd)</em></td>         
-                                <?php $tgl_putusan = (isset($data_result)&&$state?$data_result[0]['tgl_putusan']:'');?>
+                                <?php $tgl_putusan = (isset($data_result)?$data_result[0]['tgl_putusan']:'');?>
                                 <td><input type="text" class="datepicker" id="tgl_putusan" name="tgl_putusan" value="<?php echo $tgl_putusan;?>" /></td>
                             </tr>
                             <tr>
@@ -504,7 +505,7 @@ if ($mode==ACT_EDIT){
                                 <td><input type="text" id="nomor_persetujuan" name="nomor_persetujuan" value="<?php echo $nomor_persetujuan;?>" /></td>
                                 
                                 <td class="title" width="250" align="right">Tanggal Persetujuan <em>(YYYY-mm-dd)</em></td>         
-                                <?php $approval_date = (isset($data_result)&&$state?$data_result[0]['approval_date']:'');?>
+                                <?php $approval_date = (isset($data_result)?$data_result[0]['approval_date']:'');?>
                                 <td><input type="text" class="datepicker" id="approval_date" name="approval_date" value="<?php echo $approval_date;?>" <?php echo (!userHasAccess($access, "PROGRAM_APPROVE")?'disabled':''); ?> /></td>
                             </tr>
                             <tr>
@@ -513,7 +514,7 @@ if ($mode==ACT_EDIT){
                                 <td><input type="text" id="nomor_registrasi" name="nomor_registrasi" value="<?php echo $nomor_registrasi;?>" /></td>
                                 
                                 <td class="title" width="250" align="right">Tanggal Register <em>(YYYY-mm-dd)</em></td>         
-                                <?php $tgl_register = (isset($data_result)&&$state?$data_result[0]['tgl_register']:'');?>
+                                <?php $tgl_register = (isset($data_result)?$data_result[0]['tgl_register']:'');?>
                                 <td><input type="text" class="datepicker" id="tgl_register" name="tgl_register" value="<?php echo $tgl_register;?>"  /></td>
                             </tr>
                             <tr>

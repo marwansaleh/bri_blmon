@@ -114,6 +114,7 @@ function loadPrograms($page)
         //get all kanwil for searching
         $kanwil_id_like = get_kanwil_id_by_searching($search_string, $db_obj);
     }
+	$wilayah = $_POST['wilayah'];
     $type= $_POST['type'];
     $state = $_POST['state'];
     $creation_year = isset($_POST['creation_year']) ? $_POST['creation_year'] : NULL;
@@ -121,7 +122,10 @@ function loadPrograms($page)
     $num_of_recs = 7;
     //count all pages
     $sql = "SELECT COUNT(*) FROM programs p, uker u, kabupaten k, propinsi pr WHERE (p.uker=u.id)AND(k.id=u.kabupaten)AND(u.propinsi=pr.id)";
-    if ($creation_year){
+    if ($wilayah>-1){
+        $sql.=" AND (p.uker_wilayah=$wilayah)";
+    }
+	if ($creation_year){
         $sql.=" AND (YEAR(p.creation_date)=$creation_year)";
     }
     if(isset($search_string))
@@ -159,10 +163,14 @@ function loadPrograms($page)
                 p.state, u.uker, pr.propinsi, k.kabupaten, p.benef_name,p.benef_orang, p.benef_unit, 
                 DATE(p.creation_date) as creation_date, us.full_name as creation_by, 
                 DATE(p.approval_date) as approval_date, p.budget,
-                p.operational, p.creation_by as creation_by_id, u.propinsi as propinsi_id
+                p.operational, p.creation_by as creation_by_id, u.propinsi as propinsi_id,
+				p.nodin_putusan,p.nomor_persetujuan
                 FROM programs p, uker u, users us, propinsi pr, kabupaten k
                 WHERE (p.uker=u.id)AND(u.propinsi=pr.id)AND(u.kabupaten=k.id)AND(p.creation_by=us.id)";
         
+		if ($wilayah>-1){
+			$sql.=" AND (p.uker_wilayah=$wilayah)";
+		}
         if ($creation_year){
             $sql.=" AND (YEAR(p.creation_date)=$creation_year)";
         }
@@ -2840,6 +2848,7 @@ function export_filtered_programs()
         //get all kanwil for searching
         $kanwil_id_like = get_kanwil_id_by_searching($search_string, $db_obj);
     }
+	$wilayah = $_POST['wilayah'];
     $type= $_POST['type'];
     $state = $_POST['state'];
     $year_creation = isset($_POST['creation_year']) ? $_POST['creation_year'] : NULL;
@@ -2852,7 +2861,10 @@ function export_filtered_programs()
             p.operational, p.creation_by as creation_by_id, u.propinsi as propinsi_id
             FROM programs p, uker u, users us, propinsi pr, kabupaten k, program_types pt
             WHERE (p.uker=u.id)AND(u.propinsi=pr.id)AND(u.kabupaten=k.id)AND(p.creation_by=us.id)AND(p.type=pt.id)";
-    if ($year_creation){
+    if ($wilayah>-1){
+        $sql.= " AND(p.uker_wilayah=$wilayah)";
+    }
+	if ($year_creation){
         $sql.= " AND(YEAR(p.creation_date)=$year_creation)";
     }
     if (isset($search_string))
@@ -2900,14 +2912,14 @@ function export_filtered_programs()
     $Excel = new PHPExcel();
     $Excel->getProperties()->setCreator('PT. Bank Rakyat Indonesia, Tbk.')
             ->setLastModifiedBy('Div. Corporate Secretary')
-            ->setTitle('Data Program Bina Lingkungan PT. Bank Rakyat Indonesia');
+            ->setTitle('Data Program CSR PT. Bank Rakyat Indonesia');
     
     //create header
     $Excel->setActiveSheetIndex(0);
     $Excel->getActiveSheet()->setShowGridlines(TRUE);
 
     //Set Title
-    $Excel->getActiveSheet()->setCellValue('A1', 'DAFTAR PROGRAM BINA LINGKUNGAN PT. BANK RAKYAT INDONESIA, TBK.');
+    $Excel->getActiveSheet()->setCellValue('A1', 'DAFTAR PROGRAM CSR PT. BANK RAKYAT INDONESIA, TBK.');
     
     $row = 3;
     $col = 'A';
@@ -3077,14 +3089,14 @@ function export_filtered_wilayah()
     $Excel = new PHPExcel();
     $Excel->getProperties()->setCreator('PT. Bank Rakyat Indonesia, Tbk.')
             ->setLastModifiedBy('Div. Corporate Secretary')
-            ->setTitle('Data Program Bina Lingkungan PT. Bank Rakyat Indonesia');
+            ->setTitle('Data Program CSR PT. Bank Rakyat Indonesia');
     
     //create header
     $Excel->setActiveSheetIndex(0);
     $Excel->getActiveSheet()->setShowGridlines(TRUE);
 
     //Set Title
-    $Excel->getActiveSheet()->setCellValue('A1', 'DAFTAR PROGRAM BINA LINGKUNGAN PT. BANK RAKYAT INDONESIA, TBK.');
+    $Excel->getActiveSheet()->setCellValue('A1', 'DAFTAR PROGRAM CSR PT. BANK RAKYAT INDONESIA, TBK.');
     
     $row = 3;
     $col = 'A';
@@ -3589,4 +3601,3 @@ function getBenefTriwulan($year)
     echo $real_value;
 }
 ?>
-

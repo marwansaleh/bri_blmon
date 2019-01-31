@@ -106,8 +106,9 @@ if (isset($qs[1]))
             var p_search = $('input#keyword').val();
             var p_state = $('select#state').val();
             var p_year = $('#creation_year').val();
+			var kanwil = $('select#wilayah').val();
             
-            $.post("ajax",{input_function:'export_filtered_programs',type:p_state,search_str:p_search,state:p_state,creation_year:p_year}, function(result){
+            $.post("ajax",{input_function:'export_filtered_programs',type:p_state,search_str:p_search,state:p_state,creation_year:p_year,wilayah:kanwil}, function(result){
                 $('div#my-loader').hide();
                 var data = jQuery.parseJSON(result);
                 
@@ -121,6 +122,11 @@ if (isset($qs[1]))
         });
         $('select#type').change(function(){
             var program_type = $(this).val();
+            var keyword = $('input#keyword').val();
+            loadPrograms(0, program_type, keyword);
+        });
+		$('select#wilayah').change(function(){
+            var program_type = $('select#type').val();
             var keyword = $('input#keyword').val();
             loadPrograms(0, program_type, keyword);
         });
@@ -148,11 +154,12 @@ if (isset($qs[1]))
             $(this).remove();
         });
         
+        var kanwil = $('select#wilayah').val();
         var state = $('select#state').val();
         var creation_year = $('#creation_year').val();
         
         $('div#my-loader').show();
-        $.post("ajax",{input_function:'loadPrograms',param:page,type:program_type,search_str:keyword,state:state, creation_year:creation_year},function(result){
+        $.post("ajax",{input_function:'loadPrograms',param:page,type:program_type,search_str:keyword,state:state, creation_year:creation_year, wilayah:kanwil},function(result){
             $('div#my-loader').hide();
             data = jQuery.parseJSON(result);
             
@@ -180,9 +187,11 @@ if (isset($qs[1]))
                     //s+="<td>"+data['items'][i]['kabupaten']+"</td>";
                     s+="<td><a href='propinsi/"+data['items'][i]['propinsi_id']+"'>"+data['items'][i]['propinsi']+"</a></td>";
                     var budget = data['items'][i]['budget']*1;
-                    s+="<td align='right'>"+budget.formatMoney(2,',','.')+"</td>";
+                    //s+="<td align='right'>"+budget.formatMoney(2,',','.')+"</td>";
+					s+="<td align='center' width='70'>"+data['items'][i]['nodin_putusan']+"</td>";
+					s+="<td align='center' width='70'>"+data['items'][i]['nomor_persetujuan']+"</td>";
                     var operational = data['items'][i]['operational']*1;
-                    s+="<td align='right'>"+operational.formatMoney(2,',','.')+"</td>";
+                    //s+="<td align='right'>"+operational.formatMoney(2,',','.')+"</td>";
                     s+="<td align='right'>"+data['items'][i]['real_used']+"</td>";
                     s+="<td align='center' width='70'>"+data['items'][i]['creation_date']+"</td>";
                     s+="<td><a href='personals/"+data['items'][i]['creation_by_id']+"'>"+data['items'][i]['creation_by']+"</a></td>";
@@ -190,7 +199,6 @@ if (isset($qs[1]))
                         s+="<td align='center'><div class='icon-oknot'></div></td>";
                     else
                         s+="<td align='center'><div class='icon-ok'></div></td>";
-                    s+="<td align='center'>"+data['items'][i]['progress']+"</td>";
                     s+="<td onclick='viewBeneficiary("+data['items'][i]['id']+");' title='Klik untuk melihat detail penerima'><u>"+data['items'][i]['benef_name']+"</u></td>";
                     var benef_orang = data['items'][i]['benef_orang']*1;
                     s+="<td align='right'>"+benef_orang.formatMoney(0,',','.')+"</td>";
@@ -272,7 +280,7 @@ if (isset($qs[1]))
                     cancelApprovalStatus(program_id);
                 }
                 
-            })
+            });
             <?php }?>
             $('li#drp_delete').click (function(){
                 var id = [];
@@ -405,11 +413,10 @@ if (isset($qs[1]))
     
     <div id="panel-content">
         <div class="content">
-            <h1>Program BL BRI - Berdasarkan Kategori</h1>
+            <h1>Program CSR BRI - Berdasarkan Kategori</h1>
             <div id="panel-buttons">
                 <ul>
                     <li>&raquo;</li>
-                    <li class="execute" id="btn_home">Home</li>
                     <li class="dropdown">
                         <select id="type" name="type">                            
                             <?php
@@ -423,6 +430,19 @@ if (isset($qs[1]))
                             <option value="-1">SEMUA BIDANG</option>
                         </select>
                     </li>
+					<li class="dropdown">
+                        <select id="wilayah" name="wilayah">
+                            <?php
+                            $wilayahs = load_kanwil($db_obj);
+                            if($wilayahs)foreach($wilayahs as $item){
+                                echo "<option value='".$item['id']."'";
+                                if (isset($wilayah)&&$wilayah==$item['id']) echo " selected";
+                                echo ">".$item['uker']."</option>";
+                            }
+                            ?>
+                            <option value="-1">SEMUA WILAYAH</option>
+                        </select>
+                    </li>
                     <li class="dropdown">
                         <select id="state" name="state">  
                             <option value="-1">Status</option>
@@ -432,11 +452,11 @@ if (isset($qs[1]))
                     </li>
                     
                     <?php if (userHasAccess($access, "PROGRAM_CREATE")){?>
-                    <li class="execute" id="btn_create">Tambah Program</li>
+                    <li class="execute" id="btn_create">Tambah</li>
                     <?php }if (userHasAccess($access, "PROGRAM_EDIT")){?>
-                    <li class="execute" id="btn_edit">Edit Program</li>
+                    <li class="execute" id="btn_edit">Edit</li>
                     <?php }if (userHasAccess($access, "PROGRAM_DELETE")){?>
-                    <li class="execute" id="btn_delete">Hapus Program</li>
+                    <li class="execute" id="btn_delete">Hapus</li>
                     <?php }?>
                     <li class="search">&laquo;</li>
                     <li class="execute">
@@ -461,13 +481,12 @@ if (isset($qs[1]))
                     <th rowspan="2">Program</th>
                     <th rowspan="2">Unitkerja</th>                    
                     <th rowspan="2">Propinsi</th>
-                    <th rowspan="2">Anggaran</th>
-                    <th rowspan="2">Operasional</th>
+                    <th rowspan="2">Putusan</th>
+					<th rowspan="2">Persetujuan</th>
                     <th rowspan="2">Realisasi</th>
                     <th rowspan="2">Dibuat</th>
                     <th rowspan="2">Oleh</th>
-                    <th rowspan="2">Status</th>                    
-                    <th rowspan="2">(%)</th>
+                    <th rowspan="2">Status</th>   
                     <th colspan="3">Penerima</th>
                     <th rowspan="2">Action</th>
                 </tr>
